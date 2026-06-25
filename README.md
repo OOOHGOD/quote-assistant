@@ -1,4 +1,4 @@
-# Automatic Order Assistant / Quote Assistant
+# Quote Assistant
 
 本项目是一个本地运行的自动报价单整理工具，用于把供应商 PDF 报价单整理成结构化 JSON，并按固定 Excel 模板生成报价单副本。
 
@@ -122,7 +122,7 @@ quote_assistant/
 推荐使用 Anaconda：
 
 ```cmd
-cd "C:\Users\DC·Laptop-air\Documents\Automatic Order Assistant\quote_assistant"
+cd "D:\Couresware\Workspace\quote_assistant"
 conda env create -f environment.yml
 conda activate quote-assistant
 ```

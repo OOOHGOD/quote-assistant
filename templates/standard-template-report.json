@@ -1,5 +1,5 @@
 {
-  "template_path": "C:\\Users\\DC·Laptop-air\\Documents\\Automatic Order Assistant\\quote_assistant\\templates\\standard-quotation-template.xlsm",
+  "template_path": "templates/standard-quotation-template.xlsm",
   "template_file": "standard-quotation-template.xlsm",
   "template_extension": ".xlsm",
   "template_sha256": "eb33c73525ebeb2c356e521344fb40c8fe0aae9705887d043dd50f050b919159",

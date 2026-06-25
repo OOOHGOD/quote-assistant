@@ -1,5 +1,5 @@
 {
-  "template_path": "C:\\Users\\DC·Laptop-air\\Documents\\Automatic Order Assistant\\quote_assistant\\templates\\Telop - Quotation for (description) dd.mm.yyyy.xlsx",
+  "template_path": "templates/Telop - Quotation for (description) dd.mm.yyyy.xlsx",
   "template_file": "Telop - Quotation for (description) dd.mm.yyyy.xlsx",
   "template_extension": ".xlsx",
   "template_sha256": "3e0d43d8562610dbb9b7495a5b79fd273fbcfad881eb792c1a875e58a4385dae",
