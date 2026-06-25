@@ -1,3 +1,9 @@
+"""报价单异常告警。
+
+告警始终先写入本地任务目录，Webhook 只是可选投递渠道。
+这样即使网络失败，也不会丢失“为什么任务被阻断”的审计记录。
+"""
+
 from __future__ import annotations
 
 import hashlib
@@ -21,6 +27,7 @@ def emit_alert(
     details: dict[str, Any] | None = None,
     sequence: int = 1,
 ) -> dict[str, Any]:
+    """创建一条告警，并立即尝试投递。"""
     alert_issues = issues if issues is not None else job["validation"]["issues"]
     payload = {
         "event": event,
@@ -53,6 +60,10 @@ def retry_alert_delivery(
     *,
     force: bool = False,
 ) -> tuple[dict[str, Any], bool]:
+    """尝试投递告警。
+
+    未配置 `ALERT_WEBHOOK_URL` 时只保留本地记录；配置 webhook 后会按指数退避重试失败投递。
+    """
     delivery = dict(alert.get("delivery") or {})
     webhook_url = os.environ.get("ALERT_WEBHOOK_URL", "").strip()
     if not webhook_url:
@@ -105,6 +116,7 @@ def retry_alert_delivery(
 
 
 def alert_delivery_due(alert: dict[str, Any], now: datetime | None = None) -> bool:
+    """判断 webhook 告警是否已经到了下一次重试时间。"""
     delivery = alert.get("delivery") or {}
     if delivery.get("channel") != "webhook" or delivery.get("success") is True:
         return False
@@ -119,6 +131,7 @@ def alert_delivery_due(alert: dict[str, Any], now: datetime | None = None) -> bo
 
 
 def persist_alert(alert: dict[str, Any], job_dir: Path, *, latest: bool = True) -> None:
+    """把告警原子写入本地 JSON 文件。"""
     payload = alert.get("payload") or {}
     sequence = int(alert.get("sequence") or 1)
     path = _alert_path(job_dir, sequence, str(payload.get("event") or "alert"))
@@ -135,11 +148,13 @@ def persist_alert(alert: dict[str, Any], job_dir: Path, *, latest: bool = True) 
 
 
 def _alert_path(job_dir: Path, sequence: int, event: str) -> Path:
+    """根据告警序号和事件名生成安全文件名。"""
     safe_event = "".join(character if character.isalnum() or character in "-_" else "-" for character in event)
     return job_dir / f"alert-{sequence:03d}-{safe_event}.json"
 
 
 def _next_retry_at(attempted_at: str, attempts: int) -> str:
+    """按指数退避计算下一次 webhook 重试时间。"""
     base_seconds = max(1, int(os.environ.get("ALERT_RETRY_BASE_SECONDS", "30")))
     max_seconds = max(base_seconds, int(os.environ.get("ALERT_RETRY_MAX_SECONDS", "3600")))
     delay_seconds = min(max_seconds, base_seconds * (2 ** max(0, attempts - 1)))

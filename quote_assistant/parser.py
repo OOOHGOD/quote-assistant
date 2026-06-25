@@ -1,3 +1,9 @@
+"""文本型 PDF 报价单解析器。
+
+这是无需 OCR 的快速解析路径：使用 pypdf 抽取文本，再用规则识别表头、明细和合计。
+如果 PDF 文本太少，会标记为扫描件/空文本并要求 OCR 或人工录入。
+"""
+
 from __future__ import annotations
 
 import re
@@ -26,10 +32,12 @@ TOTAL_PATTERNS = {
 
 
 def _clean(value: str) -> str:
+    """压缩空白并去掉字段标签附近常见的冒号。"""
     return re.sub(r"\s+", " ", value).strip(" \t:：")
 
 
 def _number(value: str) -> float | None:
+    """把金额/数量字符串转成 float，无法解析时返回 None。"""
     try:
         return float(value.replace(",", "").replace("¥", "").replace("￥", "").replace("$", ""))
     except (TypeError, ValueError):
@@ -37,10 +45,12 @@ def _number(value: str) -> float | None:
 
 
 def _source(page: int, line: int, text: str) -> dict[str, Any]:
+    """构造字段来源，供前端展示和人工复核使用。"""
     return {"page": page, "line": line, "text": text[:500], "bbox": None}
 
 
 def _find_header(pages: list[dict[str, Any]], key: str) -> dict[str, Any]:
+    """按正则在所有页面中查找一个表头字段。"""
     for page in pages:
         for line_no, line in enumerate(page["lines"], start=1):
             for pattern in HEADER_PATTERNS[key]:
@@ -53,6 +63,7 @@ def _find_header(pages: list[dict[str, Any]], key: str) -> dict[str, Any]:
 
 
 def _parse_pipe_item(page_no: int, line_no: int, line: str) -> dict[str, Any] | None:
+    """解析竖线分隔的明细行，样例 PDF 使用这种格式。"""
     parts = [_clean(part) for part in line.split("|")]
     if len(parts) < 10 or not re.fullmatch(r"\d+", parts[0]):
         return None
@@ -80,6 +91,7 @@ def _parse_pipe_item(page_no: int, line_no: int, line: str) -> dict[str, Any] | 
 
 
 def _parse_space_item(page_no: int, line_no: int, line: str) -> dict[str, Any] | None:
+    """解析使用多空格分隔的简化明细行。"""
     parts = [part.strip() for part in re.split(r"\s{2,}", line.strip()) if part.strip()]
     if len(parts) < 6 or not re.fullmatch(r"\d+", parts[0]):
         return None
@@ -104,6 +116,7 @@ def _parse_space_item(page_no: int, line_no: int, line: str) -> dict[str, Any] |
 
 
 def parse_pdf(path: Path) -> dict[str, Any]:
+    """解析文本型 PDF 并输出统一 quote JSON。"""
     reader = PdfReader(str(path))
     pages: list[dict[str, Any]] = []
     extraction_issues: list[dict[str, Any]] = []

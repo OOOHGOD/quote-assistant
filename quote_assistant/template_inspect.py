@@ -1,3 +1,10 @@
+"""Excel 模板识别与映射草稿生成。
+
+这个模块不会修改模板文件，只读取 xlsx/xlsm 的 OpenXML 内容，提取工作表、单元格、公式、
+合并区域、行列尺寸等信息，并根据常见字段别名生成 `template_mapping.draft.json`。
+草稿必须经过人工确认和 `activate-template` 校验后才会成为正式导出映射。
+"""
+
 from __future__ import annotations
 
 import hashlib
@@ -44,6 +51,7 @@ TOTAL_ALIASES = {
 
 
 def _normalize_label(value: Any) -> str:
+    """统一标签文本，降低大小写、空白和中英文冒号差异带来的影响。"""
     return re.sub(r"\s+", " ", str(value or "").strip().lower().rstrip(":："))
 
 
@@ -75,6 +83,7 @@ def _right_address(address: str) -> str:
 
 
 def _shared_strings(files: dict[str, bytes]) -> list[str]:
+    """读取 Excel sharedStrings 表；xlsx/xlsm 常用索引引用这里的文本。"""
     data = files.get("xl/sharedStrings.xml")
     if not data:
         return []
@@ -86,6 +95,7 @@ def _shared_strings(files: dict[str, bytes]) -> list[str]:
 
 
 def _cell_value(cell: ET.Element, shared_strings: list[str]) -> Any:
+    """把 OpenXML 单元格节点转换成 Python 可读值。"""
     cell_type = cell.get("t")
     if cell_type == "inlineStr":
         return "".join(text.text or "" for text in cell.findall(f".//{_q(MAIN_NS, 't')}"))
@@ -108,6 +118,7 @@ def _cell_value(cell: ET.Element, shared_strings: list[str]) -> Any:
 
 
 def _find_label_candidates(cells: list[dict[str, Any]], aliases: dict[str, set[str]]) -> dict[str, list[dict[str, Any]]]:
+    """根据别名表在模板单元格中寻找字段候选位置。"""
     result: dict[str, list[dict[str, Any]]] = {}
     normalized_aliases = {path: {_normalize_label(alias) for alias in values} for path, values in aliases.items()}
     existing_addresses = {cell["address"] for cell in cells}
@@ -128,6 +139,7 @@ def _find_label_candidates(cells: list[dict[str, Any]], aliases: dict[str, set[s
 
 
 def inspect_xlsx_template(template_path: Path, *, cell_limit: int = 2000) -> dict[str, Any]:
+    """只读扫描 Excel 模板并生成体检报告。"""
     if template_path.suffix.lower() not in {".xlsx", ".xlsm"}:
         raise TemplateExportError("模板体检只支持.xlsx或.xlsm文件。")
     try:
@@ -203,6 +215,7 @@ def inspect_xlsx_template(template_path: Path, *, cell_limit: int = 2000) -> dic
 
 
 def mapping_draft_from_report(report: dict[str, Any], sheet_name: str | None = None) -> dict[str, Any]:
+    """根据模板体检报告生成待审核映射草稿。"""
     target_sheet = None
     for sheet in report["sheets"]:
         if sheet_name is None or sheet["name"] == sheet_name:
@@ -212,6 +225,7 @@ def mapping_draft_from_report(report: dict[str, Any], sheet_name: str | None = N
         raise TemplateExportError(f"模板报告中不存在工作表：{sheet_name}")
 
     def unique_suggestion(group: str, source_path: str) -> str:
+        """只有唯一可用候选时才自动给出建议，避免误选。"""
         candidates = target_sheet["field_candidates"][group].get(source_path, [])
         usable = [candidate["suggested_value_cell"] for candidate in candidates if candidate.get("suggested_value_cell")]
         return usable[0] if len(set(usable)) == 1 else ""
@@ -249,6 +263,7 @@ def mapping_draft_from_report(report: dict[str, Any], sheet_name: str | None = N
 
 
 def write_template_report(template_path: Path, report_path: Path, draft_path: Path, sheet_name: str | None = None) -> None:
+    """生成模板体检报告和映射草稿文件。"""
     report = inspect_xlsx_template(template_path)
     draft = mapping_draft_from_report(report, sheet_name)
     report_path.parent.mkdir(parents=True, exist_ok=True)

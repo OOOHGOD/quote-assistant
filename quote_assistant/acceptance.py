@@ -1,3 +1,12 @@
+"""本地验收报告生成。
+
+验收报告用于快速确认 MVP 的关键能力：
+- 模板映射必须人工确认；
+- 正常报价可以审核并导出；
+- 异常报价会被阻断并产生告警；
+- 正式模板/真实 PDF 是否已经准备好。
+"""
+
 from __future__ import annotations
 
 import json
@@ -11,6 +20,7 @@ from .service import QuoteService
 
 
 def create_acceptance_template(path: Path) -> None:
+    """生成一个最小可用的临时 Excel 模板，用于没有正式模板时跑通验收。"""
     workbook = """<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="报价单" sheetId="1" r:id="rId1"/></sheets></workbook>"""
     relationships = """<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>"""
     cells = []
@@ -25,6 +35,7 @@ def create_acceptance_template(path: Path) -> None:
 
 
 def acceptance_mapping(template_file: str, digest: str) -> dict[str, Any]:
+    """生成临时验收模板对应的映射配置。"""
     return {
         "configured": False,
         "review_required": True,
@@ -61,6 +72,7 @@ def acceptance_mapping(template_file: str, digest: str) -> dict[str, Any]:
 
 
 def load_mapping(mapping_path: Path, template_file: str, digest: str) -> dict[str, Any]:
+    """读取真实映射，并替换成当前导入模板的文件名和哈希。"""
     mapping = json.loads(mapping_path.read_text(encoding="utf-8"))
     mapping["template_file"] = template_file
     mapping["template_sha256"] = digest
@@ -68,6 +80,7 @@ def load_mapping(mapping_path: Path, template_file: str, digest: str) -> dict[st
 
 
 def discover_real_acceptance_inputs(project_root: Path) -> tuple[Path | None, Path | None]:
+    """自动发现当前项目中已经启用的正式模板和映射。"""
     config_path = project_root / "config.json"
     if not config_path.is_file():
         return None, None
@@ -94,6 +107,7 @@ def discover_real_acceptance_inputs(project_root: Path) -> tuple[Path | None, Pa
 
 
 def discover_real_pdf_inputs(project_root: Path) -> list[Path]:
+    """寻找样例 PDF 之外的真实 PDF，用于判断是否具备最终验收输入。"""
     sample_hashes = set()
     for sample_name in ("quote-normal.pdf", "quote-anomaly.pdf"):
         sample_path = project_root / "samples" / sample_name
@@ -119,6 +133,7 @@ def discover_real_pdf_inputs(project_root: Path) -> list[Path]:
 
 
 def build_next_actions(required_inputs: list[dict[str, Any]]) -> list[dict[str, str]]:
+    """根据缺失输入生成下一步操作建议。"""
     actions: list[dict[str, str]] = []
     missing = {entry["id"]: entry for entry in required_inputs if not entry.get("present")}
     if "real_template" in missing:
@@ -149,6 +164,7 @@ def build_next_actions(required_inputs: list[dict[str, Any]]) -> list[dict[str, 
 
 
 def immutable_excel_policy() -> dict[str, str]:
+    """返回固定模板导出的验收原则说明。"""
     return {
         "title": "EXCEL报价单格式不允许修改",
         "detail": "系统只允许向正式模板中已登记且已存在的固定单元格写值，不允许新增、删除、重排、改样式、改公式、改合并区或改工作表结构。",
@@ -163,6 +179,11 @@ def generate_acceptance_report(
     normal_pdf: Path | None = None,
     anomaly_pdf: Path | None = None,
 ) -> dict[str, Any]:
+    """生成完整验收报告。
+
+    报告在临时目录中运行，不污染正式 `data/jobs` 和 `output`；如果项目里已有正式模板，
+    会优先使用正式模板执行更接近真实交付的验收。
+    """
     project_root = project_root.resolve()
     samples_dir = project_root / "samples"
     normal_pdf = normal_pdf.resolve() if normal_pdf else samples_dir / "quote-normal.pdf"

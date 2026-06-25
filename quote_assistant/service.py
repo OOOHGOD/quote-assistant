@@ -1,3 +1,9 @@
+"""报价单任务服务层。
+
+`QuoteService` 是后端业务入口，负责把解析、校验、审核、模板导入、模板启用、Excel 导出和告警串起来。
+HTTP 接口和 CLI 都应该通过这里操作任务，避免多个入口各自改写 job.json。
+"""
+
 from __future__ import annotations
 
 import json
@@ -18,6 +24,11 @@ from .validation import apply_corrections, apply_item_rows, resolve_extraction_i
 
 
 class QuoteService:
+    """报价单任务的应用服务。
+
+    所有会修改任务状态的方法都通过 `_mutation_lock` 串行化，避免前端重复点击或后台重试导致并发写入。
+    """
+
     def __init__(self, project_root: Path):
         self.project_root = project_root
         self.config = json.loads((project_root / "config.json").read_text(encoding="utf-8"))
@@ -25,6 +36,10 @@ class QuoteService:
         self._mutation_lock = RLock()
 
     def create_job(self, filename: str, content: bytes) -> dict[str, Any]:
+        """从上传的 PDF 创建任务。
+
+        这是文本型 PDF 的快速路径；扫描件或更复杂的版面会在本地工作流中走 PaddleOCR + DeepSeek。
+        """
         if not filename.lower().endswith(".pdf"):
             raise ValueError("当前版本只接受PDF报价单。")
         if not content.startswith(b"%PDF-"):
@@ -68,6 +83,10 @@ class QuoteService:
         return job
 
     def import_template(self, filename: str, content: bytes) -> dict[str, Any]:
+        """导入原始 Excel 模板并生成体检报告/映射草稿。
+
+        这里不会启用模板，必须由人工确认映射后再调用 `activate_template_mapping`。
+        """
         safe_name = Path(filename).name
         extension = Path(safe_name).suffix.lower()
         if extension not in {".xlsx", ".xlsm"}:
@@ -102,10 +121,12 @@ class QuoteService:
         }
 
     def review_job(self, job_id: str, payload: dict[str, Any]) -> dict[str, Any]:
+        """保存、批准或驳回人工审核结果。"""
         with self._mutation_lock:
             return self._review_job_locked(job_id, payload)
 
     def _review_job_locked(self, job_id: str, payload: dict[str, Any]) -> dict[str, Any]:
+        """带锁执行审核变更，包含版本校验、字段修正、重新校验和告警记录。"""
         job = self._required_job(job_id)
         self._verify_source_integrity(job)
         current_revision = int(job.get("revision") or 0)
@@ -172,10 +193,12 @@ class QuoteService:
         return job
 
     def export_job(self, job_id: str) -> Path:
+        """导出已批准任务到当前启用的 Excel 模板。"""
         with self._mutation_lock:
             return self._export_job_locked(job_id)
 
     def _export_job_locked(self, job_id: str) -> Path:
+        """带锁执行 Excel 导出，并在失败时记录阻断告警。"""
         job = self._required_job(job_id)
         self._verify_source_integrity(job)
         if job["status"] != "approved":
@@ -205,10 +228,12 @@ class QuoteService:
         return output_path
 
     def source_document(self, job_id: str) -> Path:
+        """返回任务源 PDF，返回前会先校验源文件哈希。"""
         job = self._required_job(job_id)
         return self._verify_source_integrity(job)
 
     def retry_alerts(self, job_id: str, *, force: bool = False) -> dict[str, Any]:
+        """重试某个任务的告警投递。"""
         with self._mutation_lock:
             job = self._required_job(job_id)
             changed = False
@@ -228,6 +253,7 @@ class QuoteService:
             return job
 
     def retry_due_alerts(self) -> int:
+        """扫描全部任务，重试已经到期的 webhook 告警。"""
         retried = 0
         for stored_job in self.store.list():
             if any(alert_delivery_due(alert) for alert in stored_job.get("alerts") or []):
@@ -238,6 +264,7 @@ class QuoteService:
         return retried
 
     def template_status(self) -> dict[str, Any]:
+        """返回当前正式模板映射是否可用于导出。"""
         mapping_path = self.project_root / self.config["excel_template_mapping"]
         try:
             return {**inspect_template_configuration(mapping_path), "reason": ""}
@@ -245,6 +272,7 @@ class QuoteService:
             return {"configured": False, "reason": str(exc), "mapping_path": str(mapping_path)}
 
     def template_setup(self) -> dict[str, Any]:
+        """返回模板导入后等待人工确认的映射草稿信息。"""
         templates_dir = self.project_root / "templates"
         draft_path = templates_dir / "template_mapping.draft.json"
         report_path = templates_dir / "template_report.json"
@@ -271,6 +299,10 @@ class QuoteService:
         }
 
     def activate_template_mapping(self, payload: dict[str, Any]) -> dict[str, Any]:
+        """启用经过人工确认的模板映射。
+
+        启用前会重新校验模板哈希和映射安全性；只有通过检查的映射才会替换正式 `template_mapping.json`。
+        """
         reviewer = str(payload.get("reviewer") or "").strip()
         mapping = payload.get("mapping")
         if not reviewer:
@@ -344,6 +376,7 @@ class QuoteService:
         issues: list[dict[str, Any]] | None = None,
         details: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
+        """记录任务告警，并立即尝试本地/远端投递。"""
         history = job.setdefault("alerts", [])
         alert = emit_alert(
             job,
@@ -368,6 +401,7 @@ class QuoteService:
         changed_paths: list[str],
         human_verified_source: bool,
     ) -> None:
+        """把每次审核动作追加到审计历史中。"""
         job.setdefault("review_history", []).append({
             "action": action,
             "outcome": outcome,
@@ -382,7 +416,9 @@ class QuoteService:
         })
 
     def _changed_paths(self, before: dict[str, Any], after: dict[str, Any]) -> list[str]:
+        """比较审核前后的报价数据，返回发生变化的字段路径。"""
         def flatten(payload: Any, prefix: str = "") -> dict[str, Any]:
+            """把嵌套 quote 数据压平成 `{路径: 值}`，便于审计差异。"""
             result: dict[str, Any] = {}
             if isinstance(payload, dict):
                 if "value" in payload and "confidence" in payload:
@@ -406,6 +442,7 @@ class QuoteService:
         return sorted(path for path in set(before_values) | set(after_values) if before_values.get(path) != after_values.get(path))
 
     def _invalidate_export(self, job: dict[str, Any]) -> None:
+        """当审核数据发生变化时删除旧导出文件，防止过期 Excel 被继续使用。"""
         export = job.get("export")
         if not export:
             return
@@ -420,6 +457,7 @@ class QuoteService:
         job["export"] = None
 
     def _verify_source_integrity(self, job: dict[str, Any]) -> Path:
+        """校验源 PDF 是否仍与创建任务时的 SHA-256 一致。"""
         source_path = self.store.job_dir(job["id"]) / "source.pdf"
         expected_hash = str(job.get("source", {}).get("sha256") or "")
         if not source_path.is_file():
@@ -441,6 +479,7 @@ class QuoteService:
         return source_path
 
     def _record_source_integrity_failure(self, job: dict[str, Any], message: str, actual_hash: str | None) -> None:
+        """源文件丢失或被替换时，记录 critical 告警并阻断审核/导出。"""
         existing = (job.get("alert") or {}).get("payload", {})
         if existing.get("event") != "quote_source_integrity_failure":
             self._record_alert(job, "quote_source_integrity_failure", issues=[{
@@ -460,6 +499,7 @@ class QuoteService:
         self.store.save(job)
 
     def _required_job(self, job_id: str) -> dict[str, Any]:
+        """读取任务；不存在则抛出统一的业务错误。"""
         job = self.store.get(job_id)
         if not job:
             raise KeyError("任务不存在。")

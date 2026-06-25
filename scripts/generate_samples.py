@@ -1,3 +1,9 @@
+"""生成测试用 PDF 报价单。
+
+`quote-normal.pdf` 用于验证正常审核/导出流程；
+`quote-anomaly.pdf` 用于验证金额错误、数量错误等异常会被阻断。
+"""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -12,6 +18,7 @@ SAMPLES = ROOT / "samples"
 
 
 def write_pdf(path: Path, lines: list[str]) -> None:
+    """把多行文本写成简单 PDF，方便单元测试重复生成样例。"""
     path.parent.mkdir(parents=True, exist_ok=True)
     pdf = canvas.Canvas(str(path), pagesize=A4)
     width, height = A4
@@ -30,6 +37,7 @@ def write_pdf(path: Path, lines: list[str]) -> None:
 
 
 def main() -> None:
+    """生成正常和异常两个样例 PDF。"""
     common = [
         "Quote No: Q-2026-0612-01",
         "Supplier: Shanghai Sample Furniture Co., Ltd.",
@@ -58,4 +66,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

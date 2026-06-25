@@ -1,3 +1,14 @@
+"""本地 HTTP 工作台入口。
+
+这个文件只负责把浏览器请求翻译成 `QuoteService` 的方法调用：
+- `/api/jobs` 上传 PDF 并创建审核任务；
+- `/api/jobs/<id>/review` 保存、批准或驳回人工审核；
+- `/api/jobs/<id>/excel` 从已批准任务导出 Excel；
+- `/api/template/*` 导入、体检并启用 Excel 模板映射。
+
+注意：这里返回给前端的数据会主动隐藏本机路径和原始 OCR 页文本，避免把本地目录结构暴露给浏览器层。
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -22,9 +33,16 @@ SERVICE = QuoteService(ROOT)
 
 
 class Handler(BaseHTTPRequestHandler):
+    """轻量级请求处理器。
+
+    项目没有引入 Flask/FastAPI，是为了让 MVP 在标准库环境里也能运行。
+    业务状态全部交给全局 `SERVICE`，本类只做协议解析、参数读取和响应格式化。
+    """
+
     server_version = "QuoteAssistant/0.1"
 
     def do_GET(self) -> None:
+        """处理只读接口和静态文件。"""
         path = urlparse(self.path).path
         if path == "/api/health":
             return self.json_response({"status": "ok", "excel_template": self.public_template_status(SERVICE.template_status())})
@@ -58,6 +76,7 @@ class Handler(BaseHTTPRequestHandler):
         return self.serve_static(path)
 
     def do_POST(self) -> None:
+        """处理会改变状态的接口。"""
         path = urlparse(self.path).path
         if path == "/api/jobs":
             return self.handle_upload()
@@ -86,6 +105,7 @@ class Handler(BaseHTTPRequestHandler):
         return self.json_response({"error": "Not found"}, HTTPStatus.NOT_FOUND)
 
     def handle_upload(self) -> None:
+        """接收 PDF 表单上传，并创建一个本地审核任务。"""
         content_type = self.headers.get("Content-Type", "")
         if "multipart/form-data" not in content_type:
             return self.json_response({"error": "请使用multipart/form-data上传PDF。"}, HTTPStatus.BAD_REQUEST)
@@ -100,6 +120,7 @@ class Handler(BaseHTTPRequestHandler):
             return self.json_response({"error": str(exc)}, HTTPStatus.BAD_REQUEST)
 
     def handle_template_upload(self) -> None:
+        """接收 Excel 模板上传，只生成体检报告和映射草稿，不会立即启用。"""
         content_type = self.headers.get("Content-Type", "")
         if "multipart/form-data" not in content_type:
             return self.json_response({"error": "请使用multipart/form-data上传Excel模板。"}, HTTPStatus.BAD_REQUEST)
@@ -114,12 +135,14 @@ class Handler(BaseHTTPRequestHandler):
             return self.json_response({"error": str(exc)}, HTTPStatus.BAD_REQUEST)
 
     def read_json(self) -> dict:
+        """读取请求体中的 JSON；空请求体按空字典处理。"""
         length = int(self.headers.get("Content-Length", "0"))
         if not length:
             return {}
         return json.loads(self.rfile.read(length).decode("utf-8"))
 
     def public_job(self, job: dict) -> dict:
+        """生成面向前端的任务对象，并隐藏本机路径、告警路径和原始页文本。"""
         public = deepcopy(job)
         public.pop("source_path", None)
         for alert in public.get("alerts") or []:
@@ -136,18 +159,21 @@ class Handler(BaseHTTPRequestHandler):
         return public
 
     def public_template_status(self, status: dict) -> dict:
+        """隐藏模板和映射文件的本机绝对路径。"""
         public = deepcopy(status)
         public.pop("mapping_path", None)
         public.pop("template_path", None)
         return public
 
     def public_template_import_result(self, result: dict) -> dict:
+        """隐藏模板导入过程中的临时/本机路径。"""
         public = deepcopy(result)
         for key in ("stored_path", "report_path", "draft_mapping_path"):
             public.pop(key, None)
         return public
 
     def serve_static(self, path: str) -> None:
+        """返回前端静态文件，并阻止路径穿越访问项目外文件。"""
         relative = "index.html" if path in {"", "/"} else unquote(path).lstrip("/")
         target = (STATIC_ROOT / relative).resolve()
         if STATIC_ROOT not in target.parents and target != STATIC_ROOT:
@@ -163,6 +189,10 @@ class Handler(BaseHTTPRequestHandler):
         inline_name: str | None = None,
         cache_control: str | None = None,
     ) -> None:
+        """统一发送文件响应。
+
+        Excel 走 attachment 下载；PDF 源文件预览走 inline；所有文件都加 nosniff 降低浏览器误判类型的风险。
+        """
         content = path.read_bytes()
         self.send_response(HTTPStatus.OK)
         self.send_header("Content-Type", mimetypes.guess_type(path.name)[0] or "application/octet-stream")
@@ -178,6 +208,7 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(content)
 
     def json_response(self, payload, status: HTTPStatus = HTTPStatus.OK) -> None:
+        """统一发送 UTF-8 JSON 响应。"""
         content = json.dumps(payload, ensure_ascii=False).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")

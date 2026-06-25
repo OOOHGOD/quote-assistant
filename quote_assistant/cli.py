@@ -1,3 +1,9 @@
+"""命令行入口。
+
+适合没有可视化界面的本地批处理、Anaconda 环境调试和 n8n `Execute Command` 调用。
+所有输出都使用 JSON，便于外部流程读取 `ok/job_id/output_path` 等字段。
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -15,6 +21,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 def main(argv: list[str] | None = None) -> int:
+    """解析命令并执行对应 handler。"""
     parser = build_parser()
     args = parser.parse_args(argv)
     try:
@@ -27,6 +34,7 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
+    """定义 CLI 子命令和参数。"""
     parser = argparse.ArgumentParser(description="Local quote workflow CLI")
     parser.add_argument("--project-root", type=Path, default=PROJECT_ROOT)
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -62,18 +70,21 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def handle_run_local(args: argparse.Namespace) -> dict[str, Any]:
+    """执行本地 PDF -> OCR -> DeepSeek -> 审核任务流程。"""
     workflow = build_default_workflow(args.project_root)
     result = workflow.run(args.pdf, reviewer=args.reviewer, approve=args.approve, export=args.export)
     return {"ok": True, **result.to_summary()}
 
 
 def handle_import_template(args: argparse.Namespace) -> dict[str, Any]:
+    """导入本地 Excel 模板并生成映射草稿。"""
     service = QuoteService(args.project_root)
     result = service.import_template(args.template.name, args.template.read_bytes())
     return {"ok": True, **_redact_paths(result)}
 
 
 def handle_activate_template(args: argparse.Namespace) -> dict[str, Any]:
+    """启用人工确认后的模板映射。"""
     service = QuoteService(args.project_root)
     mapping = json.loads(args.mapping_json.read_text(encoding="utf-8"))
     result = service.activate_template_mapping(
@@ -87,12 +98,14 @@ def handle_activate_template(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def handle_export_job(args: argparse.Namespace) -> dict[str, Any]:
+    """导出已批准任务到当前启用模板。"""
     service = QuoteService(args.project_root)
     output = service.export_job(args.job_id)
     return {"ok": True, "job_id": args.job_id, "output_path": str(output)}
 
 
 def handle_acceptance(args: argparse.Namespace) -> dict[str, Any]:
+    """生成本地验收报告。"""
     return {
         "ok": True,
         "report": generate_acceptance_report(
@@ -106,6 +119,7 @@ def handle_acceptance(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def _redact_paths(payload: dict[str, Any]) -> dict[str, Any]:
+    """CLI 默认隐藏内部路径，只返回用户真正需要看的摘要字段。"""
     result = dict(payload)
     for key in ("stored_path", "report_path", "draft_mapping_path", "template_path", "mapping_path"):
         result.pop(key, None)

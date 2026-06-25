@@ -1,3 +1,8 @@
+"""命令行验收报告脚本。
+
+用途：生成一份 JSON 报告，检查模板导出、异常阻断、真实模板/真实 PDF 准备情况。
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -13,6 +18,7 @@ from quote_assistant.acceptance import generate_acceptance_report
 
 
 def main() -> None:
+    """解析可选输入并输出验收报告 JSON。"""
     parser = argparse.ArgumentParser(description="运行报价单MVP验收并输出JSON报告")
     parser.add_argument("--project-root", default=str(PROJECT_ROOT))
     parser.add_argument("--output", default="", help="可选：将JSON报告写入指定路径")

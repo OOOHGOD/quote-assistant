@@ -1,3 +1,8 @@
+"""生成项目内置的标准报价单模板。
+
+这个脚本只用于生成示例/默认模板；真实业务模板仍建议通过 `import-template` 体检后启用。
+"""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -12,6 +17,7 @@ OUTPUT_PATH = TEMPLATE_DIR / "standard-quotation-template.xlsm"
 
 
 def apply_table_style(ws) -> None:
+    """给报价单工作表设置基础样式、列宽和数字格式。"""
     thin = Side(style="thin", color="B7C3D0")
     border = Border(left=thin, right=thin, top=thin, bottom=thin)
     header_fill = PatternFill("solid", fgColor="D9E2F3")
@@ -48,6 +54,7 @@ def apply_table_style(ws) -> None:
 
 
 def build_template() -> Path:
+    """创建标准报价单模板并保存到 templates 目录。"""
     TEMPLATE_DIR.mkdir(parents=True, exist_ok=True)
     wb = Workbook()
     ws = wb.active

@@ -1,3 +1,9 @@
+"""报价单结构校验与人工修正工具。
+
+校验层不关心数据来自 pypdf、PaddleOCR 还是 DeepSeek，只检查统一 quote JSON：
+必填字段、置信度、明细金额、合计金额、重复编码和人工确认状态。
+"""
+
 from __future__ import annotations
 
 from copy import deepcopy
@@ -16,14 +22,21 @@ NUMERIC_ITEM_FIELDS = {"quantity", "unit_price", "amount"}
 
 
 def _value(candidate: dict[str, Any] | None) -> Any:
+    """读取字段包装对象中的实际值。"""
     return (candidate or {}).get("value")
 
 
 def _confidence(candidate: dict[str, Any] | None) -> float:
+    """读取字段包装对象中的置信度，缺失时按 0 处理。"""
     return float((candidate or {}).get("confidence") or 0.0)
 
 
 def validate_quote(quote: dict[str, Any], config: dict[str, Any]) -> dict[str, Any]:
+    """校验报价单并给出流程决策。
+
+    返回的 `decision` 只有两种：存在 error/critical 时进入 `needs_review`，
+    否则进入 `ready_for_review`，仍然需要人工批准后才能导出 Excel。
+    """
     issues = [deepcopy(entry) for entry in quote.get("extraction_issues", []) if not entry.get("resolved_by_human")]
     threshold = float(config.get("confidence_threshold", 0.8))
     critical_threshold = float(config.get("critical_confidence_threshold", 0.9))
@@ -31,6 +44,7 @@ def validate_quote(quote: dict[str, Any], config: dict[str, Any]) -> dict[str, A
     critical_fields = set(config.get("critical_fields", []))
 
     for name in REQUIRED_HEADERS:
+        # 表头必填字段缺失会阻断批准，避免没有供应商/币种/报价号的报价单流入导出。
         candidate = quote.get("headers", {}).get(name)
         if _value(candidate) in (None, ""):
             issues.append(issue("MISSING_REQUIRED_FIELD", "error", f"缺少必填字段：{name}", f"headers.{name}"))
@@ -49,6 +63,7 @@ def validate_quote(quote: dict[str, Any], config: dict[str, Any]) -> dict[str, A
     calculated_subtotal = 0.0
     seen_codes: set[str] = set()
     for index, item in enumerate(quote.get("items", [])):
+        # 明细行同时检查必填字段、置信度和金额公式，尽量把 OCR/agent 错误暴露给人工审核。
         for name in REQUIRED_ITEM_FIELDS:
             candidate = item.get(name)
             if _value(candidate) in (None, ""):
@@ -101,6 +116,10 @@ def validate_quote(quote: dict[str, Any], config: dict[str, Any]) -> dict[str, A
 
 
 def apply_corrections(quote: dict[str, Any], corrections: dict[str, Any]) -> dict[str, Any]:
+    """应用前端提交的字段级人工修正。
+
+    被人工修正的字段置信度直接设为 1.0，并打上 `corrected_by_human` 标记。
+    """
     corrected = deepcopy(quote)
     for path, value in corrections.items():
         parts = path.split(".")
@@ -124,6 +143,10 @@ def apply_corrections(quote: dict[str, Any], corrections: dict[str, Any]) -> dic
 
 
 def apply_item_rows(quote: dict[str, Any], rows: list[dict[str, Any]], max_items: int = 500) -> dict[str, Any]:
+    """应用人工编辑后的明细表。
+
+    支持删除、重排和新增明细；新增字段会保留人工录入来源，便于后续审计。
+    """
     if len(rows) > max_items:
         raise ValueError(f"人工明细最多允许 {max_items} 行。")
     corrected = deepcopy(quote)
@@ -172,6 +195,7 @@ def apply_item_rows(quote: dict[str, Any], rows: list[dict[str, Any]], max_items
 
 
 def resolve_extraction_issues(quote: dict[str, Any], reviewer: str, reviewed_at: str, source_sha256: str = "") -> dict[str, Any]:
+    """把“需要人工核对源文件”的抽取问题标记为已人工确认。"""
     corrected = deepcopy(quote)
     for entry in corrected.get("extraction_issues", []):
         entry["resolved_by_human"] = True

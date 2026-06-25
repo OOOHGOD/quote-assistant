@@ -1,3 +1,14 @@
+"""PaddleOCR-VL 异步 OCR 客户端。
+
+本模块封装 PaddleOCR 在线接口的完整生命周期：
+1. 读取环境变量中的 token 和模型参数；
+2. 上传本地 PDF 创建 OCR job；
+3. 轮询 job 状态直到完成；
+4. 下载 JSONL 结果，并从 layout/ocr 结果中拼出 Markdown 文本。
+
+输出的 `OcrDocument` 是 DeepSeek 抽取前的标准中间产物，也会写入 `data/jobs/<job_id>/ocr/` 便于审计。
+"""
+
 from __future__ import annotations
 
 import json
@@ -21,6 +32,11 @@ class PaddleOcrError(RuntimeError):
 
 @dataclass(frozen=True)
 class PaddleOcrSettings:
+    """PaddleOCR 运行配置。
+
+    token 从环境变量读取，不写入配置文件或仓库；其他参数保留默认值即可跑通主流程。
+    """
+
     token: str
     job_url: str = DEFAULT_JOB_URL
     model: str = DEFAULT_MODEL
@@ -31,6 +47,7 @@ class PaddleOcrSettings:
 
     @classmethod
     def from_env(cls) -> "PaddleOcrSettings":
+        """从环境变量构造配置，方便不改代码就切换模型、接口和超时时间。"""
         token = os.environ.get("PADDLEOCR_TOKEN", "").strip()
         if not token:
             raise PaddleOcrError("PADDLEOCR_TOKEN is required for PaddleOCR extraction.")
@@ -52,6 +69,12 @@ class PaddleOcrSettings:
 
 @dataclass(frozen=True)
 class OcrDocument:
+    """OCR 结果的标准载体。
+
+    `markdown_text` 给 DeepSeek agent 使用，`jsonl_text/raw_lines` 给排错和复核使用，
+    `metadata` 保存接口返回的进度等信息。
+    """
+
     job_id: str
     model: str
     markdown_text: str
@@ -61,6 +84,7 @@ class OcrDocument:
     metadata: dict[str, Any]
 
     def write_artifacts(self, output_dir: Path) -> None:
+        """把 OCR 中间产物落盘，方便后续复核同一次识别结果。"""
         output_dir.mkdir(parents=True, exist_ok=True)
         (output_dir / "ocr.md").write_text(self.markdown_text, encoding="utf-8")
         (output_dir / "ocr.jsonl").write_text(self.jsonl_text, encoding="utf-8")
@@ -80,10 +104,13 @@ class OcrDocument:
 
 
 class PaddleOcrClient:
+    """PaddleOCR API 调用封装。"""
+
     def __init__(self, settings: PaddleOcrSettings):
         self.settings = settings
 
     def parse_local_file(self, file_path: Path) -> OcrDocument:
+        """识别本地 PDF，并返回可供 agent 抽取的 OCR 文档。"""
         resolved = file_path.resolve()
         if not resolved.is_file():
             raise PaddleOcrError(f"Local document does not exist: {resolved}")
@@ -111,6 +138,7 @@ class PaddleOcrClient:
         return {"Authorization": f"Bearer {self.settings.token}"}
 
     def _submit_file(self, file_path: Path) -> str:
+        """提交文件并返回远端 jobId。"""
         data = {
             "model": self.settings.model,
             "optionalPayload": json.dumps(self.settings.optional_payload, ensure_ascii=False),
@@ -130,6 +158,7 @@ class PaddleOcrClient:
         return job_id
 
     def _wait_for_result(self, job_id: str) -> dict[str, Any]:
+        """轮询 OCR job，直到 done/failed/timeout。"""
         deadline = time.monotonic() + self.settings.timeout_seconds
         last_payload: dict[str, Any] | None = None
         while time.monotonic() <= deadline:
@@ -152,6 +181,7 @@ class PaddleOcrClient:
         raise PaddleOcrError(f"PaddleOCR job {job_id} timed out. Last response: {last_payload}")
 
     def _download_jsonl(self, json_url: str) -> str:
+        """下载 PaddleOCR 生成的 JSONL 结果文件。"""
         response = requests.get(json_url, timeout=self.settings.request_timeout_seconds)
         if response.status_code >= 400:
             raise PaddleOcrError(f"Could not download PaddleOCR JSONL result: HTTP {response.status_code}")
@@ -159,6 +189,7 @@ class PaddleOcrClient:
 
 
 def parse_jsonl(jsonl_text: str) -> list[dict[str, Any]]:
+    """逐行解析 JSONL；任何一行损坏都直接阻断流程。"""
     rows: list[dict[str, Any]] = []
     for line_number, line in enumerate(jsonl_text.splitlines(), start=1):
         stripped = line.strip()
@@ -172,6 +203,11 @@ def parse_jsonl(jsonl_text: str) -> list[dict[str, Any]]:
 
 
 def extract_markdown(rows: list[dict[str, Any]]) -> str:
+    """从 PaddleOCR 的多种结果结构中提取可读文本。
+
+    优先使用 `layoutParsingResults[].markdown.text`，这是最接近版面语义的内容；
+    如果接口只返回普通 OCR 文本，也会回退读取 `ocrResults`。
+    """
     chunks: list[str] = []
     for row in rows:
         result = row.get("result") if isinstance(row, dict) else None
@@ -190,6 +226,7 @@ def extract_markdown(rows: list[dict[str, Any]]) -> str:
 
 
 def _json_response(response: requests.Response) -> dict[str, Any]:
+    """校验 PaddleOCR HTTP 响应，并统一转换成 dict。"""
     try:
         payload = response.json()
     except ValueError as exc:
@@ -200,6 +237,7 @@ def _json_response(response: requests.Response) -> dict[str, Any]:
 
 
 def _env_bool(name: str, default: bool) -> bool:
+    """读取布尔型环境变量，支持常见的 true/1/yes/on 写法。"""
     value = os.environ.get(name)
     if value is None:
         return default
