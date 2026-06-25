@@ -1,0 +1,38 @@
+{
+  "configured": true,
+  "template_file": "standard-quotation-template.xlsm",
+  "sheet_name": "报价单",
+  "header_cells": {
+    "quote.headers.quote_no.value": "B1",
+    "quote.headers.supplier.value": "B2",
+    "quote.headers.customer.value": "B3",
+    "quote.headers.project.value": "B4",
+    "quote.headers.quote_date.value": "B5",
+    "quote.headers.currency.value": "B6"
+  },
+  "items": {
+    "path": "quote.items",
+    "start_row": 8,
+    "max_rows": 20,
+    "columns": {
+      "line_no": "A",
+      "product_code.value": "B",
+      "product_name.value": "C",
+      "specification.value": "D",
+      "material.value": "E",
+      "color.value": "F",
+      "unit.value": "G",
+      "quantity.value": "H",
+      "unit_price.value": "I",
+      "amount.value": "J",
+      "location.value": "K",
+      "remarks.value": "L"
+    }
+  },
+  "total_cells": {
+    "quote.totals.subtotal.value": "B30",
+    "quote.totals.tax.value": "B31",
+    "quote.totals.grand_total.value": "B32"
+  },
+  "clear_unused_item_rows": true
+}

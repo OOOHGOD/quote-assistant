@@ -1,0 +1,1172 @@
+{
+  "template_path": "C:\\Users\\DC·Laptop-air\\Documents\\Automatic Order Assistant\\quote_assistant\\templates\\Telop - Quotation for (description) dd.mm.yyyy.xlsx",
+  "template_file": "Telop - Quotation for (description) dd.mm.yyyy.xlsx",
+  "template_extension": ".xlsx",
+  "template_sha256": "3e0d43d8562610dbb9b7495a5b79fd273fbcfad881eb792c1a875e58a4385dae",
+  "package_file_count": 27,
+  "sheet_count": 1,
+  "sheets": [
+    {
+      "name": "Sheet1",
+      "path": "xl/worksheets/sheet1.xml",
+      "dimension": "A1:J18",
+      "cell_node_count": 138,
+      "reported_cell_count": 138,
+      "cell_limit_reached": false,
+      "formula_count": 3,
+      "merged_ranges": [
+        "A5:J5",
+        "A1:D1",
+        "A2:J2",
+        "A4:C4",
+        "A15:F17",
+        "A11:E11",
+        "A9:G9",
+        "A10:B10",
+        "A12:E14"
+      ],
+      "row_dimensions": [
+        {
+          "row": "1",
+          "height": "22.25",
+          "style": null
+        },
+        {
+          "row": "2",
+          "height": "155",
+          "style": null
+        },
+        {
+          "row": "3",
+          "height": "21.75",
+          "style": null
+        },
+        {
+          "row": "4",
+          "height": "33",
+          "style": null
+        },
+        {
+          "row": "5",
+          "height": "22.5",
+          "style": null
+        },
+        {
+          "row": "6",
+          "height": "32",
+          "style": null
+        },
+        {
+          "row": "7",
+          "height": "302",
+          "style": null
+        },
+        {
+          "row": "8",
+          "height": "289",
+          "style": null
+        },
+        {
+          "row": "9",
+          "height": "30",
+          "style": null
+        },
+        {
+          "row": "10",
+          "height": "37.25",
+          "style": null
+        },
+        {
+          "row": "15",
+          "height": "23",
+          "style": null
+        },
+        {
+          "row": "16",
+          "height": "23",
+          "style": null
+        },
+        {
+          "row": "17",
+          "height": "23",
+          "style": null
+        },
+        {
+          "row": "18",
+          "height": "23",
+          "style": null
+        }
+      ],
+      "column_dimensions": [
+        {
+          "min": "1",
+          "max": "1",
+          "width": "13",
+          "style": null,
+          "hidden": null
+        },
+        {
+          "min": "2",
+          "max": "2",
+          "width": "22",
+          "style": null,
+          "hidden": null
+        },
+        {
+          "min": "3",
+          "max": "3",
+          "width": "18.6640625",
+          "style": null,
+          "hidden": null
+        },
+        {
+          "min": "4",
+          "max": "4",
+          "width": "22.33203125",
+          "style": null,
+          "hidden": null
+        },
+        {
+          "min": "5",
+          "max": "5",
+          "width": "13.5",
+          "style": null,
+          "hidden": null
+        },
+        {
+          "min": "6",
+          "max": "6",
+          "width": "10.5",
+          "style": null,
+          "hidden": null
+        },
+        {
+          "min": "7",
+          "max": "8",
+          "width": "20.5",
+          "style": null,
+          "hidden": null
+        },
+        {
+          "min": "9",
+          "max": "9",
+          "width": "22.33203125",
+          "style": null,
+          "hidden": null
+        },
+        {
+          "min": "10",
+          "max": "10",
+          "width": "35.1640625",
+          "style": null,
+          "hidden": null
+        }
+      ],
+      "page_setup": {
+        "paperSize": "9",
+        "scale": "51",
+        "orientation": "portrait",
+        "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id": "rId1"
+      },
+      "page_margins": {
+        "left": "0.7",
+        "right": "0.7",
+        "top": "0.75",
+        "bottom": "0.75",
+        "header": "0.3",
+        "footer": "0.3"
+      },
+      "auto_filter": null,
+      "cells": [
+        {
+          "address": "A1",
+          "value": "TELOP TRADING CO., LTD",
+          "formula": null,
+          "style_id": "28",
+          "type": "s"
+        },
+        {
+          "address": "B1",
+          "value": null,
+          "formula": null,
+          "style_id": "28",
+          "type": null
+        },
+        {
+          "address": "C1",
+          "value": null,
+          "formula": null,
+          "style_id": "28",
+          "type": null
+        },
+        {
+          "address": "D1",
+          "value": null,
+          "formula": null,
+          "style_id": "28",
+          "type": null
+        },
+        {
+          "address": "E1",
+          "value": null,
+          "formula": null,
+          "style_id": "1",
+          "type": null
+        },
+        {
+          "address": "F1",
+          "value": null,
+          "formula": null,
+          "style_id": "1",
+          "type": null
+        },
+        {
+          "address": "G1",
+          "value": null,
+          "formula": null,
+          "style_id": "1",
+          "type": null
+        },
+        {
+          "address": "H1",
+          "value": null,
+          "formula": null,
+          "style_id": "1",
+          "type": null
+        },
+        {
+          "address": "I1",
+          "value": null,
+          "formula": null,
+          "style_id": "1",
+          "type": null
+        },
+        {
+          "address": "J1",
+          "value": "Client name",
+          "formula": null,
+          "style_id": "2",
+          "type": "s"
+        },
+        {
+          "address": "A2",
+          "value": "QUOTATION",
+          "formula": null,
+          "style_id": "29",
+          "type": "s"
+        },
+        {
+          "address": "B2",
+          "value": null,
+          "formula": null,
+          "style_id": "29",
+          "type": null
+        },
+        {
+          "address": "C2",
+          "value": null,
+          "formula": null,
+          "style_id": "30",
+          "type": null
+        },
+        {
+          "address": "D2",
+          "value": null,
+          "formula": null,
+          "style_id": "30",
+          "type": null
+        },
+        {
+          "address": "E2",
+          "value": null,
+          "formula": null,
+          "style_id": "30",
+          "type": null
+        },
+        {
+          "address": "F2",
+          "value": null,
+          "formula": null,
+          "style_id": "30",
+          "type": null
+        },
+        {
+          "address": "G2",
+          "value": null,
+          "formula": null,
+          "style_id": "30",
+          "type": null
+        },
+        {
+          "address": "H2",
+          "value": null,
+          "formula": null,
+          "style_id": "30",
+          "type": null
+        },
+        {
+          "address": "I2",
+          "value": null,
+          "formula": null,
+          "style_id": "30",
+          "type": null
+        },
+        {
+          "address": "J2",
+          "value": null,
+          "formula": null,
+          "style_id": "30",
+          "type": null
+        },
+        {
+          "address": "A3",
+          "value": "QUOTATION DATE",
+          "formula": null,
+          "style_id": "4",
+          "type": "s"
+        },
+        {
+          "address": "B3",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": null
+        },
+        {
+          "address": "C3",
+          "value": null,
+          "formula": null,
+          "style_id": "5",
+          "type": null
+        },
+        {
+          "address": "D3",
+          "value": null,
+          "formula": null,
+          "style_id": "3",
+          "type": null
+        },
+        {
+          "address": "E3",
+          "value": null,
+          "formula": null,
+          "style_id": "3",
+          "type": null
+        },
+        {
+          "address": "F3",
+          "value": null,
+          "formula": null,
+          "style_id": "3",
+          "type": null
+        },
+        {
+          "address": "G3",
+          "value": null,
+          "formula": null,
+          "style_id": "3",
+          "type": null
+        },
+        {
+          "address": "H3",
+          "value": null,
+          "formula": null,
+          "style_id": "3",
+          "type": null
+        },
+        {
+          "address": "I3",
+          "value": null,
+          "formula": null,
+          "style_id": "3",
+          "type": null
+        },
+        {
+          "address": "J3",
+          "value": "QUOTATION",
+          "formula": null,
+          "style_id": "7",
+          "type": "s"
+        },
+        {
+          "address": "A4",
+          "value": 45691,
+          "formula": null,
+          "style_id": "31",
+          "type": null
+        },
+        {
+          "address": "B4",
+          "value": null,
+          "formula": null,
+          "style_id": "31",
+          "type": null
+        },
+        {
+          "address": "C4",
+          "value": null,
+          "formula": null,
+          "style_id": "32",
+          "type": null
+        },
+        {
+          "address": "D4",
+          "value": null,
+          "formula": null,
+          "style_id": "3",
+          "type": null
+        },
+        {
+          "address": "E4",
+          "value": null,
+          "formula": null,
+          "style_id": "3",
+          "type": null
+        },
+        {
+          "address": "F4",
+          "value": null,
+          "formula": null,
+          "style_id": "3",
+          "type": null
+        },
+        {
+          "address": "G4",
+          "value": null,
+          "formula": null,
+          "style_id": "3",
+          "type": null
+        },
+        {
+          "address": "H4",
+          "value": null,
+          "formula": null,
+          "style_id": "3",
+          "type": null
+        },
+        {
+          "address": "I4",
+          "value": null,
+          "formula": null,
+          "style_id": "3",
+          "type": null
+        },
+        {
+          "address": "J4",
+          "value": "#35154151",
+          "formula": null,
+          "style_id": "11",
+          "type": "s"
+        },
+        {
+          "address": "A5",
+          "value": null,
+          "formula": null,
+          "style_id": "26",
+          "type": null
+        },
+        {
+          "address": "B5",
+          "value": null,
+          "formula": null,
+          "style_id": "26",
+          "type": null
+        },
+        {
+          "address": "C5",
+          "value": null,
+          "formula": null,
+          "style_id": "27",
+          "type": null
+        },
+        {
+          "address": "D5",
+          "value": null,
+          "formula": null,
+          "style_id": "27",
+          "type": null
+        },
+        {
+          "address": "E5",
+          "value": null,
+          "formula": null,
+          "style_id": "27",
+          "type": null
+        },
+        {
+          "address": "F5",
+          "value": null,
+          "formula": null,
+          "style_id": "27",
+          "type": null
+        },
+        {
+          "address": "G5",
+          "value": null,
+          "formula": null,
+          "style_id": "27",
+          "type": null
+        },
+        {
+          "address": "H5",
+          "value": null,
+          "formula": null,
+          "style_id": "27",
+          "type": null
+        },
+        {
+          "address": "I5",
+          "value": null,
+          "formula": null,
+          "style_id": "27",
+          "type": null
+        },
+        {
+          "address": "J5",
+          "value": null,
+          "formula": null,
+          "style_id": "27",
+          "type": null
+        },
+        {
+          "address": "A6",
+          "value": "Supplier\nCode",
+          "formula": null,
+          "style_id": "12",
+          "type": "s"
+        },
+        {
+          "address": "B6",
+          "value": "Image Reference",
+          "formula": null,
+          "style_id": "12",
+          "type": "s"
+        },
+        {
+          "address": "C6",
+          "value": "Description",
+          "formula": null,
+          "style_id": "12",
+          "type": "s"
+        },
+        {
+          "address": "D6",
+          "value": "Specifications",
+          "formula": null,
+          "style_id": "12",
+          "type": "s"
+        },
+        {
+          "address": "E6",
+          "value": "Production days",
+          "formula": null,
+          "style_id": "12",
+          "type": "s"
+        },
+        {
+          "address": "F6",
+          "value": "MOQ/QTY",
+          "formula": null,
+          "style_id": "12",
+          "type": "s"
+        },
+        {
+          "address": "G6",
+          "value": "Unit price (RMB)",
+          "formula": null,
+          "style_id": "12",
+          "type": "s"
+        },
+        {
+          "address": "H6",
+          "value": "Total price (USD)",
+          "formula": null,
+          "style_id": "12",
+          "type": "s"
+        },
+        {
+          "address": "I6",
+          "value": "Supplier details",
+          "formula": null,
+          "style_id": "12",
+          "type": "s"
+        },
+        {
+          "address": "J6",
+          "value": "Remarks",
+          "formula": null,
+          "style_id": "12",
+          "type": "s"
+        },
+        {
+          "address": "A7",
+          "value": "AAA",
+          "formula": null,
+          "style_id": "15",
+          "type": "s"
+        },
+        {
+          "address": "B7",
+          "value": null,
+          "formula": null,
+          "style_id": "23",
+          "type": null
+        },
+        {
+          "address": "C7",
+          "value": "Hair brush",
+          "formula": null,
+          "style_id": "18",
+          "type": "s"
+        },
+        {
+          "address": "D7",
+          "value": "Size: \nAaaa\nMaterials:\nAaaa\nColors:\nAaaa\nLogo:\nAaaa\nPackage:\nAaaa\nOther: \nAaa",
+          "formula": null,
+          "style_id": "19",
+          "type": "s"
+        },
+        {
+          "address": "E7",
+          "value": 15,
+          "formula": null,
+          "style_id": "6",
+          "type": null
+        },
+        {
+          "address": "F7",
+          "value": 500,
+          "formula": null,
+          "style_id": "21",
+          "type": null
+        },
+        {
+          "address": "G7",
+          "value": 10,
+          "formula": null,
+          "style_id": "13",
+          "type": null
+        },
+        {
+          "address": "H7",
+          "value": 5000,
+          "formula": "G7*F7",
+          "style_id": "13",
+          "type": null
+        },
+        {
+          "address": "I7",
+          "value": "Name:\nAaaa\nLocation:\nAaaa\nWebsite:\nAaaa\nWechat:\nAaaa",
+          "formula": null,
+          "style_id": "20",
+          "type": "s"
+        },
+        {
+          "address": "J7",
+          "value": "The final price will be determined after the final design and details are confirmed.\n\nTrade Term:\nAaa\nPayment term:\nSample & Mold: \n100%\nBulk: \n30% deposit + 70% balance before shipment\nSample fee:\n$240/pc\nSample time:\n15-20 days\n\nPacking:\nCustom packaging cost shall be confirmed based on final confirmed details.",
+          "formula": null,
+          "style_id": "22",
+          "type": "s"
+        },
+        {
+          "address": "A8",
+          "value": "BBB",
+          "formula": null,
+          "style_id": "15",
+          "type": "s"
+        },
+        {
+          "address": "B8",
+          "value": null,
+          "formula": null,
+          "style_id": "24",
+          "type": null
+        },
+        {
+          "address": "C8",
+          "value": "Hair brush",
+          "formula": null,
+          "style_id": "18",
+          "type": "s"
+        },
+        {
+          "address": "D8",
+          "value": "Size: \nAaaa\nMaterials:\nAaaa\nColors:\nAaaa\nLogo:\nAaaa\nPackage:\nAaaa\nOther: \nAaa",
+          "formula": null,
+          "style_id": "19",
+          "type": "s"
+        },
+        {
+          "address": "E8",
+          "value": 15,
+          "formula": null,
+          "style_id": "6",
+          "type": null
+        },
+        {
+          "address": "F8",
+          "value": 500,
+          "formula": null,
+          "style_id": "21",
+          "type": null
+        },
+        {
+          "address": "G8",
+          "value": 10,
+          "formula": null,
+          "style_id": "25",
+          "type": null
+        },
+        {
+          "address": "H8",
+          "value": 5000,
+          "formula": "G8*F8",
+          "style_id": "13",
+          "type": null
+        },
+        {
+          "address": "I8",
+          "value": "Name:\nAaaa\nLocation:\nAaaa\nWebsite:\nAaaa\nWechat:\nAaaa",
+          "formula": null,
+          "style_id": "20",
+          "type": "s"
+        },
+        {
+          "address": "J8",
+          "value": "The final price will be determined after the final design and details are confirmed.\n\nTrade Term:\nEXW\nPayment term:\nSample & Mold: \n100%\nBulk: \n30% deposit + 70% balance before shipment\nSample fee:\n$240/pc\nSample time:\n15-20 days\n\nPacking:\nCustom packaging cost shall be confirmed based on final confirmed details.",
+          "formula": null,
+          "style_id": "22",
+          "type": "s"
+        },
+        {
+          "address": "A9",
+          "value": "Summary",
+          "formula": null,
+          "style_id": "36",
+          "type": "s"
+        },
+        {
+          "address": "B9",
+          "value": null,
+          "formula": null,
+          "style_id": "37",
+          "type": null
+        },
+        {
+          "address": "C9",
+          "value": null,
+          "formula": null,
+          "style_id": "37",
+          "type": null
+        },
+        {
+          "address": "D9",
+          "value": null,
+          "formula": null,
+          "style_id": "37",
+          "type": null
+        },
+        {
+          "address": "E9",
+          "value": null,
+          "formula": null,
+          "style_id": "37",
+          "type": null
+        },
+        {
+          "address": "F9",
+          "value": null,
+          "formula": null,
+          "style_id": "37",
+          "type": null
+        },
+        {
+          "address": "G9",
+          "value": null,
+          "formula": null,
+          "style_id": "37",
+          "type": null
+        },
+        {
+          "address": "H9",
+          "value": 10000,
+          "formula": "SUM(H7:H8)",
+          "style_id": "14",
+          "type": null
+        },
+        {
+          "address": "I9",
+          "value": null,
+          "formula": null,
+          "style_id": "16",
+          "type": null
+        },
+        {
+          "address": "J9",
+          "value": null,
+          "formula": null,
+          "style_id": "17",
+          "type": null
+        },
+        {
+          "address": "A10",
+          "value": "Issued by Hod",
+          "formula": null,
+          "style_id": "38",
+          "type": "s"
+        },
+        {
+          "address": "B10",
+          "value": null,
+          "formula": null,
+          "style_id": "38",
+          "type": null
+        },
+        {
+          "address": "C10",
+          "value": null,
+          "formula": null,
+          "style_id": "9",
+          "type": null
+        },
+        {
+          "address": "D10",
+          "value": null,
+          "formula": null,
+          "style_id": "9",
+          "type": null
+        },
+        {
+          "address": "E10",
+          "value": null,
+          "formula": null,
+          "style_id": "9",
+          "type": null
+        },
+        {
+          "address": "F10",
+          "value": null,
+          "formula": null,
+          "style_id": "9",
+          "type": null
+        },
+        {
+          "address": "G10",
+          "value": null,
+          "formula": null,
+          "style_id": "9",
+          "type": null
+        },
+        {
+          "address": "H10",
+          "value": null,
+          "formula": null,
+          "style_id": "10",
+          "type": null
+        },
+        {
+          "address": "I10",
+          "value": null,
+          "formula": null,
+          "style_id": "10",
+          "type": null
+        },
+        {
+          "address": "J10",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": null
+        },
+        {
+          "address": "A11",
+          "value": null,
+          "formula": null,
+          "style_id": "35",
+          "type": null
+        },
+        {
+          "address": "B11",
+          "value": null,
+          "formula": null,
+          "style_id": "35",
+          "type": null
+        },
+        {
+          "address": "C11",
+          "value": null,
+          "formula": null,
+          "style_id": "35",
+          "type": null
+        },
+        {
+          "address": "D11",
+          "value": null,
+          "formula": null,
+          "style_id": "35",
+          "type": null
+        },
+        {
+          "address": "E11",
+          "value": null,
+          "formula": null,
+          "style_id": "35",
+          "type": null
+        },
+        {
+          "address": "A12",
+          "value": null,
+          "formula": null,
+          "style_id": "39",
+          "type": null
+        },
+        {
+          "address": "B12",
+          "value": null,
+          "formula": null,
+          "style_id": "39",
+          "type": null
+        },
+        {
+          "address": "C12",
+          "value": null,
+          "formula": null,
+          "style_id": "39",
+          "type": null
+        },
+        {
+          "address": "D12",
+          "value": null,
+          "formula": null,
+          "style_id": "39",
+          "type": null
+        },
+        {
+          "address": "E12",
+          "value": null,
+          "formula": null,
+          "style_id": "39",
+          "type": null
+        },
+        {
+          "address": "A13",
+          "value": null,
+          "formula": null,
+          "style_id": "39",
+          "type": null
+        },
+        {
+          "address": "B13",
+          "value": null,
+          "formula": null,
+          "style_id": "39",
+          "type": null
+        },
+        {
+          "address": "C13",
+          "value": null,
+          "formula": null,
+          "style_id": "39",
+          "type": null
+        },
+        {
+          "address": "D13",
+          "value": null,
+          "formula": null,
+          "style_id": "39",
+          "type": null
+        },
+        {
+          "address": "E13",
+          "value": null,
+          "formula": null,
+          "style_id": "39",
+          "type": null
+        },
+        {
+          "address": "A14",
+          "value": null,
+          "formula": null,
+          "style_id": "39",
+          "type": null
+        },
+        {
+          "address": "B14",
+          "value": null,
+          "formula": null,
+          "style_id": "39",
+          "type": null
+        },
+        {
+          "address": "C14",
+          "value": null,
+          "formula": null,
+          "style_id": "39",
+          "type": null
+        },
+        {
+          "address": "D14",
+          "value": null,
+          "formula": null,
+          "style_id": "39",
+          "type": null
+        },
+        {
+          "address": "E14",
+          "value": null,
+          "formula": null,
+          "style_id": "39",
+          "type": null
+        },
+        {
+          "address": "A15",
+          "value": "Unit 04-05, 16/F, The Broadway, 54-62 Lockhart Road, Wanchai, Hong-Kong\nTel +8613113398735 \nE-mail info@teloptrading.com \nWebsite www.teloptrading.com",
+          "formula": null,
+          "style_id": "33",
+          "type": "s"
+        },
+        {
+          "address": "B15",
+          "value": null,
+          "formula": null,
+          "style_id": "34",
+          "type": null
+        },
+        {
+          "address": "C15",
+          "value": null,
+          "formula": null,
+          "style_id": "34",
+          "type": null
+        },
+        {
+          "address": "D15",
+          "value": null,
+          "formula": null,
+          "style_id": "34",
+          "type": null
+        },
+        {
+          "address": "E15",
+          "value": null,
+          "formula": null,
+          "style_id": "34",
+          "type": null
+        },
+        {
+          "address": "F15",
+          "value": null,
+          "formula": null,
+          "style_id": "34",
+          "type": null
+        },
+        {
+          "address": "A16",
+          "value": null,
+          "formula": null,
+          "style_id": "34",
+          "type": null
+        },
+        {
+          "address": "B16",
+          "value": null,
+          "formula": null,
+          "style_id": "34",
+          "type": null
+        },
+        {
+          "address": "C16",
+          "value": null,
+          "formula": null,
+          "style_id": "34",
+          "type": null
+        },
+        {
+          "address": "D16",
+          "value": null,
+          "formula": null,
+          "style_id": "34",
+          "type": null
+        },
+        {
+          "address": "E16",
+          "value": null,
+          "formula": null,
+          "style_id": "34",
+          "type": null
+        },
+        {
+          "address": "F16",
+          "value": null,
+          "formula": null,
+          "style_id": "34",
+          "type": null
+        },
+        {
+          "address": "A17",
+          "value": null,
+          "formula": null,
+          "style_id": "34",
+          "type": null
+        },
+        {
+          "address": "B17",
+          "value": null,
+          "formula": null,
+          "style_id": "34",
+          "type": null
+        },
+        {
+          "address": "C17",
+          "value": null,
+          "formula": null,
+          "style_id": "34",
+          "type": null
+        },
+        {
+          "address": "D17",
+          "value": null,
+          "formula": null,
+          "style_id": "34",
+          "type": null
+        },
+        {
+          "address": "E17",
+          "value": null,
+          "formula": null,
+          "style_id": "34",
+          "type": null
+        },
+        {
+          "address": "F17",
+          "value": null,
+          "formula": null,
+          "style_id": "34",
+          "type": null
+        }
+      ],
+      "field_candidates": {
+        "headers": {},
+        "items": {
+          "product_name.value": [
+            {
+              "label_cell": "C6",
+              "label": "Description",
+              "suggested_value_cell": "D6",
+              "style_id": "12"
+            }
+          ],
+          "remarks.value": [
+            {
+              "label_cell": "J6",
+              "label": "Remarks",
+              "suggested_value_cell": null,
+              "style_id": "12"
+            }
+          ]
+        },
+        "totals": {}
+      }
+    }
+  ]
+}

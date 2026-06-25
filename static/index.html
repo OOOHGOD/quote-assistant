@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>报价单识别与审核</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <div class="brand">报价单识别与审核</div>
+      <div class="subhead">PDF → 结构化字段 → 异常校验 → 人工审批 → 原Excel模板填值</div>
+    </div>
+    <div class="header-actions">
+      <span id="templateStatus" class="template-status">检查模板...</span>
+      <button id="acceptanceButton" class="template-button">导出验收报告</button>
+      <button id="mappingButton" class="template-button" hidden>审核模板映射</button>
+      <label class="template-button" for="templateFile">导入原Excel模板</label>
+      <input id="templateFile" type="file" accept=".xlsx,.xlsm" hidden>
+      <label class="upload-button" for="pdfFile">上传PDF</label>
+      <input id="pdfFile" type="file" accept="application/pdf" hidden>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <aside class="queue-panel">
+      <div class="panel-heading">
+        <h2>审核队列</h2>
+        <button id="refreshButton" class="icon-button" title="刷新" aria-label="刷新">↻</button>
+      </div>
+      <div id="queue" class="queue"></div>
+      <section id="acceptanceSummary" class="acceptance-summary"></section>
+    </aside>
+
+    <section class="review-panel">
+      <div id="emptyState" class="empty-state">
+        <strong>上传一份PDF报价单开始</strong>
+        <span>识别异常会进入审核队列；正式Excel只向原模板的指定单元格写值，格式不允许修改。</span>
+      </div>
+
+      <div id="jobView" class="job-view" hidden>
+        <div class="job-toolbar">
+          <div>
+            <div class="job-title" id="jobTitle"></div>
+            <div class="job-meta" id="jobMeta"></div>
+          </div>
+          <div class="toolbar-actions">
+            <button id="saveButton" class="secondary-button">保存修正</button>
+            <button id="approveButton" class="primary-button">批准并锁定</button>
+            <button id="downloadButton" class="secondary-button" disabled>下载Excel</button>
+          </div>
+        </div>
+        <section class="immutable-notice" aria-label="Excel格式锁定说明">
+          <strong>Excel报价单格式已锁定</strong>
+          <span>系统只会向原模板中已审核确认的固定单元格写入值，不会修改工作表结构、样式、公式、合并单元格、行高列宽或打印设置。</span>
+        </section>
+
+        <section id="alertBanner" class="alert-banner" hidden></section>
+
+        <div class="source-review-band">
+          <div class="section-title">
+            <div><h2>原PDF证据</h2><span id="sourceMeta"></span></div>
+            <button id="openSourceButton" class="secondary-button small-button">新窗口查看</button>
+          </div>
+          <iframe id="sourcePreview" class="source-preview" title="原PDF报价单预览"></iframe>
+        </div>
+
+        <div class="content-band">
+          <div class="section-title"><h2>基本信息</h2><span>人工修改后置信度记为100%</span></div>
+          <div id="headerFields" class="field-grid"></div>
+        </div>
+
+        <div class="content-band">
+          <div class="section-title">
+            <div><h2>报价明细</h2><span id="itemCount"></span></div>
+            <button id="addItemButton" class="secondary-button small-button">新增明细</button>
+          </div>
+          <div class="table-scroll"><table id="itemsTable"></table></div>
+        </div>
+
+        <div class="content-band">
+          <div class="section-title"><h2>金额合计</h2><span>用于校验明细合计、税额和总计</span></div>
+          <div id="totalFields" class="field-grid total-grid"></div>
+        </div>
+
+        <div class="content-band">
+          <div class="section-title"><h2>异常与审核</h2><span id="issueSummary"></span></div>
+          <div id="issues" class="issues"></div>
+          <div id="alertHistory" class="alert-history"></div>
+          <label id="sourceVerification" class="verification-control" hidden>
+            <input id="sourceVerifiedCheckbox" type="checkbox">
+            <span>我已逐项对照原PDF，确认人工录入内容与源文件一致</span>
+          </label>
+          <div class="review-inputs">
+            <label>审核人<input id="reviewer" value="人工审核员"></label>
+            <label class="note-field">审核意见<input id="reviewNote" placeholder="记录修正依据或审批意见"></label>
+          </div>
+          <div id="reviewHistory" class="review-history"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div id="mappingModal" class="modal-backdrop" hidden>
+    <section class="mapping-modal" role="dialog" aria-modal="true" aria-labelledby="mappingTitle">
+      <div class="mapping-header">
+        <div>
+          <h2 id="mappingTitle">模板映射审核</h2>
+          <div id="mappingMeta" class="job-meta"></div>
+        </div>
+        <button id="closeMappingButton" class="icon-button" aria-label="关闭" title="关闭">×</button>
+      </div>
+      <div class="mapping-body">
+        <div class="mapping-lock-note">
+          <strong>启用前确认：</strong>
+          <span>这里审核的是填值映射，不是修改模板版式。正式导出仍只允许写入既有单元格值，Excel报价单格式不允许修改。</span>
+        </div>
+        <div class="mapping-section">
+          <h3>基本信息单元格</h3>
+          <div id="mappingHeaders" class="mapping-grid"></div>
+        </div>
+        <div class="mapping-section">
+          <h3>明细区域</h3>
+          <div class="mapping-grid compact-grid">
+            <label>工作表<select id="mappingSheet"></select></label>
+            <label>明细起始行<input id="mappingStartRow" type="number" min="1"></label>
+            <label>最大预留行数<input id="mappingMaxRows" type="number" min="1"></label>
+          </div>
+          <div id="mappingItems" class="mapping-grid"></div>
+        </div>
+        <div class="mapping-section">
+          <h3>合计单元格</h3>
+          <div id="mappingTotals" class="mapping-grid"></div>
+        </div>
+        <div class="mapping-section mapping-approval">
+          <label>审核人<input id="mappingReviewer" placeholder="填写审核人"></label>
+          <label class="verification-control">
+            <input id="mappingConfirmation" type="checkbox">
+            <span>已核对全部映射；仅向固定单元格写值，不修改Excel格式</span>
+          </label>
+        </div>
+      </div>
+      <div class="mapping-footer">
+        <button id="cancelMappingButton" class="secondary-button">取消</button>
+        <button id="activateMappingButton" class="primary-button">校验并启用</button>
+      </div>
+    </section>
+  </div>
+  <div id="toast" class="toast" hidden></div>
+  <script src="/app.js"></script>
+</body>
+</html>

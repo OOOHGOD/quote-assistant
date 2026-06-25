@@ -1,0 +1,37 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+.env
+.env.*
+
+# IDE and editor files
+.idea/
+.vscode/
+
+# Node dependencies
+node_modules/
+
+# Runtime data
+data/jobs/*
+!data/jobs/.gitkeep
+output/*
+!output/.gitkeep
+*.log
+server.out.log
+server.err.log
+
+# Local secrets
+*.key
+*.pem
+secrets.json
+
+# Temporary files
+*.tmp
+*.bak
+~$*

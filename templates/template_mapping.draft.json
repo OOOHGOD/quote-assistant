@@ -1,0 +1,41 @@
+{
+  "configured": false,
+  "review_required": true,
+  "template_file": "Telop - Quotation for (description) dd.mm.yyyy.xlsx",
+  "template_sha256": "3e0d43d8562610dbb9b7495a5b79fd273fbcfad881eb792c1a875e58a4385dae",
+  "sheet_name": "Sheet1",
+  "header_cells": {
+    "quote.headers.quote_no.value": "",
+    "quote.headers.supplier.value": "",
+    "quote.headers.customer.value": "",
+    "quote.headers.project.value": "",
+    "quote.headers.quote_date.value": "",
+    "quote.headers.currency.value": ""
+  },
+  "items": {
+    "path": "quote.items",
+    "header_row_suggestion": 6,
+    "start_row": 7,
+    "max_rows": 0,
+    "columns": {
+      "line_no": "",
+      "product_code.value": "",
+      "product_name.value": "C",
+      "specification.value": "",
+      "material.value": "",
+      "color.value": "",
+      "unit.value": "",
+      "quantity.value": "",
+      "unit_price.value": "",
+      "amount.value": "",
+      "location.value": "",
+      "remarks.value": "J"
+    }
+  },
+  "total_cells": {
+    "quote.totals.subtotal.value": "",
+    "quote.totals.tax.value": "",
+    "quote.totals.grand_total.value": ""
+  },
+  "clear_unused_item_rows": true
+}

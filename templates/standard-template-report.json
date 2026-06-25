@@ -1,0 +1,2983 @@
+{
+  "template_path": "C:\\Users\\DC·Laptop-air\\Documents\\Automatic Order Assistant\\quote_assistant\\templates\\standard-quotation-template.xlsm",
+  "template_file": "standard-quotation-template.xlsm",
+  "template_extension": ".xlsm",
+  "template_sha256": "eb33c73525ebeb2c356e521344fb40c8fe0aae9705887d043dd50f050b919159",
+  "package_file_count": 9,
+  "sheet_count": 1,
+  "sheets": [
+    {
+      "name": "报价单",
+      "path": "xl/worksheets/sheet1.xml",
+      "dimension": "A1:L32",
+      "cell_node_count": 384,
+      "reported_cell_count": 384,
+      "cell_limit_reached": false,
+      "formula_count": 0,
+      "merged_ranges": [],
+      "row_dimensions": [],
+      "column_dimensions": [
+        {
+          "min": "1",
+          "max": "1",
+          "width": "10",
+          "style": null,
+          "hidden": null
+        },
+        {
+          "min": "2",
+          "max": "2",
+          "width": "14",
+          "style": null,
+          "hidden": null
+        },
+        {
+          "min": "3",
+          "max": "3",
+          "width": "18",
+          "style": null,
+          "hidden": null
+        },
+        {
+          "min": "4",
+          "max": "4",
+          "width": "18",
+          "style": null,
+          "hidden": null
+        },
+        {
+          "min": "5",
+          "max": "5",
+          "width": "14",
+          "style": null,
+          "hidden": null
+        },
+        {
+          "min": "6",
+          "max": "6",
+          "width": "12",
+          "style": null,
+          "hidden": null
+        },
+        {
+          "min": "7",
+          "max": "7",
+          "width": "10",
+          "style": null,
+          "hidden": null
+        },
+        {
+          "min": "8",
+          "max": "8",
+          "width": "10",
+          "style": null,
+          "hidden": null
+        },
+        {
+          "min": "9",
+          "max": "9",
+          "width": "12",
+          "style": null,
+          "hidden": null
+        },
+        {
+          "min": "10",
+          "max": "10",
+          "width": "12",
+          "style": null,
+          "hidden": null
+        },
+        {
+          "min": "11",
+          "max": "11",
+          "width": "16",
+          "style": null,
+          "hidden": null
+        },
+        {
+          "min": "12",
+          "max": "12",
+          "width": "24",
+          "style": null,
+          "hidden": null
+        }
+      ],
+      "page_setup": {},
+      "page_margins": {
+        "left": "0.75",
+        "right": "0.75",
+        "top": "1",
+        "bottom": "1",
+        "header": "0.5",
+        "footer": "0.5"
+      },
+      "auto_filter": null,
+      "cells": [
+        {
+          "address": "A1",
+          "value": "报价编号",
+          "formula": null,
+          "style_id": "1",
+          "type": "inlineStr"
+        },
+        {
+          "address": "B1",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "C1",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "D1",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "E1",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "F1",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "G1",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "H1",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "I1",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "J1",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "K1",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "L1",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "A2",
+          "value": "供应商",
+          "formula": null,
+          "style_id": "3",
+          "type": "inlineStr"
+        },
+        {
+          "address": "B2",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "C2",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "D2",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "E2",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "F2",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "G2",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "H2",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "I2",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "J2",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "K2",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "L2",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "A3",
+          "value": "客户",
+          "formula": null,
+          "style_id": "3",
+          "type": "inlineStr"
+        },
+        {
+          "address": "B3",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "C3",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "D3",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "E3",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "F3",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "G3",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "H3",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "I3",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "J3",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "K3",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "L3",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "A4",
+          "value": "项目",
+          "formula": null,
+          "style_id": "3",
+          "type": "inlineStr"
+        },
+        {
+          "address": "B4",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "C4",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "D4",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "E4",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "F4",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "G4",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "H4",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "I4",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "J4",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "K4",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "L4",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "A5",
+          "value": "报价日期",
+          "formula": null,
+          "style_id": "3",
+          "type": "inlineStr"
+        },
+        {
+          "address": "B5",
+          "value": null,
+          "formula": null,
+          "style_id": "5",
+          "type": "n"
+        },
+        {
+          "address": "C5",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "D5",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "E5",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "F5",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "G5",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "H5",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "I5",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "J5",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "K5",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "L5",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "A6",
+          "value": "币种",
+          "formula": null,
+          "style_id": "3",
+          "type": "inlineStr"
+        },
+        {
+          "address": "B6",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "C6",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "D6",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "E6",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "F6",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "G6",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "H6",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "I6",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "J6",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "K6",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "L6",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "A7",
+          "value": "序号",
+          "formula": null,
+          "style_id": "6",
+          "type": "inlineStr"
+        },
+        {
+          "address": "B7",
+          "value": "产品编码",
+          "formula": null,
+          "style_id": "6",
+          "type": "inlineStr"
+        },
+        {
+          "address": "C7",
+          "value": "产品名称",
+          "formula": null,
+          "style_id": "6",
+          "type": "inlineStr"
+        },
+        {
+          "address": "D7",
+          "value": "规格尺寸",
+          "formula": null,
+          "style_id": "6",
+          "type": "inlineStr"
+        },
+        {
+          "address": "E7",
+          "value": "材质",
+          "formula": null,
+          "style_id": "6",
+          "type": "inlineStr"
+        },
+        {
+          "address": "F7",
+          "value": "颜色",
+          "formula": null,
+          "style_id": "6",
+          "type": "inlineStr"
+        },
+        {
+          "address": "G7",
+          "value": "单位",
+          "formula": null,
+          "style_id": "6",
+          "type": "inlineStr"
+        },
+        {
+          "address": "H7",
+          "value": "数量",
+          "formula": null,
+          "style_id": "6",
+          "type": "inlineStr"
+        },
+        {
+          "address": "I7",
+          "value": "单价",
+          "formula": null,
+          "style_id": "6",
+          "type": "inlineStr"
+        },
+        {
+          "address": "J7",
+          "value": "金额",
+          "formula": null,
+          "style_id": "6",
+          "type": "inlineStr"
+        },
+        {
+          "address": "K7",
+          "value": "房间/区域",
+          "formula": null,
+          "style_id": "6",
+          "type": "inlineStr"
+        },
+        {
+          "address": "L7",
+          "value": "备注",
+          "formula": null,
+          "style_id": "6",
+          "type": "inlineStr"
+        },
+        {
+          "address": "A8",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B8",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C8",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D8",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E8",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F8",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G8",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H8",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I8",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J8",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K8",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L8",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A9",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B9",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C9",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D9",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E9",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F9",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G9",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H9",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I9",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J9",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K9",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L9",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A10",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B10",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C10",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D10",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E10",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F10",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G10",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H10",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I10",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J10",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K10",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L10",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A11",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B11",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C11",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D11",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E11",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F11",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G11",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H11",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I11",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J11",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K11",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L11",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A12",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B12",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C12",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D12",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E12",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F12",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G12",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H12",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I12",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J12",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K12",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L12",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A13",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B13",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C13",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D13",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E13",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F13",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G13",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H13",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I13",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J13",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K13",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L13",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A14",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B14",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C14",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D14",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E14",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F14",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G14",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H14",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I14",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J14",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K14",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L14",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A15",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B15",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C15",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D15",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E15",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F15",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G15",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H15",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I15",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J15",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K15",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L15",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A16",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B16",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C16",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D16",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E16",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F16",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G16",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H16",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I16",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J16",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K16",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L16",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A17",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B17",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C17",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D17",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E17",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F17",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G17",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H17",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I17",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J17",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K17",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L17",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A18",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B18",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C18",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D18",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E18",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F18",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G18",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H18",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I18",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J18",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K18",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L18",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A19",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B19",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C19",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D19",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E19",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F19",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G19",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H19",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I19",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J19",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K19",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L19",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A20",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B20",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C20",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D20",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E20",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F20",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G20",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H20",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I20",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J20",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K20",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L20",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A21",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B21",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C21",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D21",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E21",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F21",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G21",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H21",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I21",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J21",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K21",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L21",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A22",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B22",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C22",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D22",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E22",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F22",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G22",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H22",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I22",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J22",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K22",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L22",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A23",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B23",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C23",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D23",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E23",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F23",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G23",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H23",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I23",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J23",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K23",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L23",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A24",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B24",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C24",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D24",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E24",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F24",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G24",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H24",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I24",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J24",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K24",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L24",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A25",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B25",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C25",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D25",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E25",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F25",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G25",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H25",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I25",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J25",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K25",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L25",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A26",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B26",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C26",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D26",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E26",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F26",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G26",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H26",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I26",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J26",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K26",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L26",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A27",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "B27",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "C27",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "D27",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "E27",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "F27",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "G27",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "H27",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "I27",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "J27",
+          "value": null,
+          "formula": null,
+          "style_id": "8",
+          "type": "n"
+        },
+        {
+          "address": "K27",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "L27",
+          "value": null,
+          "formula": null,
+          "style_id": "7",
+          "type": "n"
+        },
+        {
+          "address": "A28",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "B28",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "C28",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "D28",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "E28",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "F28",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "G28",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "H28",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "I28",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "J28",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "K28",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "L28",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "A29",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "B29",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "C29",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "D29",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "E29",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "F29",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "G29",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "H29",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "I29",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "J29",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "K29",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "L29",
+          "value": null,
+          "formula": null,
+          "style_id": "4",
+          "type": "n"
+        },
+        {
+          "address": "A30",
+          "value": "小计",
+          "formula": null,
+          "style_id": "1",
+          "type": "inlineStr"
+        },
+        {
+          "address": "B30",
+          "value": null,
+          "formula": null,
+          "style_id": "9",
+          "type": "n"
+        },
+        {
+          "address": "C30",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "D30",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "E30",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "F30",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "G30",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "H30",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "I30",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "J30",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "K30",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "L30",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "A31",
+          "value": "税额",
+          "formula": null,
+          "style_id": "1",
+          "type": "inlineStr"
+        },
+        {
+          "address": "B31",
+          "value": null,
+          "formula": null,
+          "style_id": "9",
+          "type": "n"
+        },
+        {
+          "address": "C31",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "D31",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "E31",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "F31",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "G31",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "H31",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "I31",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "J31",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "K31",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "L31",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "A32",
+          "value": "总计",
+          "formula": null,
+          "style_id": "1",
+          "type": "inlineStr"
+        },
+        {
+          "address": "B32",
+          "value": null,
+          "formula": null,
+          "style_id": "9",
+          "type": "n"
+        },
+        {
+          "address": "C32",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "D32",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "E32",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "F32",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "G32",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "H32",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "I32",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "J32",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "K32",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        },
+        {
+          "address": "L32",
+          "value": null,
+          "formula": null,
+          "style_id": "2",
+          "type": "n"
+        }
+      ],
+      "field_candidates": {
+        "headers": {
+          "quote.headers.quote_no.value": [
+            {
+              "label_cell": "A1",
+              "label": "报价编号",
+              "suggested_value_cell": "B1",
+              "style_id": "1"
+            }
+          ],
+          "quote.headers.supplier.value": [
+            {
+              "label_cell": "A2",
+              "label": "供应商",
+              "suggested_value_cell": "B2",
+              "style_id": "3"
+            }
+          ],
+          "quote.headers.customer.value": [
+            {
+              "label_cell": "A3",
+              "label": "客户",
+              "suggested_value_cell": "B3",
+              "style_id": "3"
+            }
+          ],
+          "quote.headers.project.value": [
+            {
+              "label_cell": "A4",
+              "label": "项目",
+              "suggested_value_cell": "B4",
+              "style_id": "3"
+            }
+          ],
+          "quote.headers.quote_date.value": [
+            {
+              "label_cell": "A5",
+              "label": "报价日期",
+              "suggested_value_cell": "B5",
+              "style_id": "3"
+            }
+          ],
+          "quote.headers.currency.value": [
+            {
+              "label_cell": "A6",
+              "label": "币种",
+              "suggested_value_cell": "B6",
+              "style_id": "3"
+            }
+          ]
+        },
+        "items": {
+          "line_no": [
+            {
+              "label_cell": "A7",
+              "label": "序号",
+              "suggested_value_cell": "B7",
+              "style_id": "6"
+            }
+          ],
+          "product_code.value": [
+            {
+              "label_cell": "B7",
+              "label": "产品编码",
+              "suggested_value_cell": "C7",
+              "style_id": "6"
+            }
+          ],
+          "product_name.value": [
+            {
+              "label_cell": "C7",
+              "label": "产品名称",
+              "suggested_value_cell": "D7",
+              "style_id": "6"
+            }
+          ],
+          "specification.value": [
+            {
+              "label_cell": "D7",
+              "label": "规格尺寸",
+              "suggested_value_cell": "E7",
+              "style_id": "6"
+            }
+          ],
+          "material.value": [
+            {
+              "label_cell": "E7",
+              "label": "材质",
+              "suggested_value_cell": "F7",
+              "style_id": "6"
+            }
+          ],
+          "color.value": [
+            {
+              "label_cell": "F7",
+              "label": "颜色",
+              "suggested_value_cell": "G7",
+              "style_id": "6"
+            }
+          ],
+          "unit.value": [
+            {
+              "label_cell": "G7",
+              "label": "单位",
+              "suggested_value_cell": "H7",
+              "style_id": "6"
+            }
+          ],
+          "quantity.value": [
+            {
+              "label_cell": "H7",
+              "label": "数量",
+              "suggested_value_cell": "I7",
+              "style_id": "6"
+            }
+          ],
+          "unit_price.value": [
+            {
+              "label_cell": "I7",
+              "label": "单价",
+              "suggested_value_cell": "J7",
+              "style_id": "6"
+            }
+          ],
+          "amount.value": [
+            {
+              "label_cell": "J7",
+              "label": "金额",
+              "suggested_value_cell": "K7",
+              "style_id": "6"
+            }
+          ],
+          "location.value": [
+            {
+              "label_cell": "K7",
+              "label": "房间/区域",
+              "suggested_value_cell": "L7",
+              "style_id": "6"
+            }
+          ],
+          "remarks.value": [
+            {
+              "label_cell": "L7",
+              "label": "备注",
+              "suggested_value_cell": null,
+              "style_id": "6"
+            }
+          ]
+        },
+        "totals": {
+          "quote.totals.subtotal.value": [
+            {
+              "label_cell": "A30",
+              "label": "小计",
+              "suggested_value_cell": "B30",
+              "style_id": "1"
+            }
+          ],
+          "quote.totals.tax.value": [
+            {
+              "label_cell": "A31",
+              "label": "税额",
+              "suggested_value_cell": "B31",
+              "style_id": "1"
+            }
+          ],
+          "quote.totals.grand_total.value": [
+            {
+              "label_cell": "A32",
+              "label": "总计",
+              "suggested_value_cell": "B32",
+              "style_id": "1"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

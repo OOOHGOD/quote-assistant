@@ -1,0 +1,12 @@
+{
+  "confidence_threshold": 0.8,
+  "critical_confidence_threshold": 0.9,
+  "amount_tolerance": 0.02,
+  "require_manual_approval": true,
+  "alert_on_severities": ["error", "critical"],
+  "critical_fields": ["supplier", "quote_no", "product_name", "quantity", "unit_price", "amount"],
+  "max_manual_items": 500,
+  "max_pdf_bytes": 52428800,
+  "alert_retry_interval_seconds": 30,
+  "excel_template_mapping": "templates/template_mapping.json"
+}
