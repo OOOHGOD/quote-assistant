@@ -56,7 +56,7 @@ async function loadQueue(selectId = null) {
   state.templateReason = health.excel_template?.reason || "";
   const templateStatus = $("#templateStatus");
   templateStatus.textContent = state.templateReady
-    ? `妯℃澘鏍煎紡宸查攣瀹氾細${health.excel_template.template_file}`
+    ? `模板格式已锁定：${health.excel_template.template_file}`
     : "Excel模板未就绪，且格式不允许修改";
   templateStatus.title = state.templateReady
     ? `SHA-256: ${health.excel_template.template_sha256}；仅允许向固定单元格写值，不修改Excel格式。`
@@ -69,8 +69,8 @@ async function loadQueue(selectId = null) {
   queue.innerHTML = state.jobs.length ? state.jobs.map((job) => `
     <button class="queue-item ${state.current?.id === job.id ? "active" : ""}" data-id="${job.id}">
       <div class="queue-file">${escapeHtml(job.source_file)}</div>
-      <div class="queue-meta"><span class="status ${job.status}">${formatStatus(job.status)}</span><span>${job.validation?.blocking_issue_count ?? 0} 涓樆鏂」</span></div>
-    </button>`).join("") : '<div class="empty-state" style="height:180px"><span>鏆傛棤浠诲姟</span></div>';
+      <div class="queue-meta"><span class="status ${job.status}">${formatStatus(job.status)}</span><span>${job.validation?.blocking_issue_count ?? 0} 个阻断项</span></div>
+    </button>`).join("") : '<div class="empty-state" style="height:180px"><span>暂无任务</span></div>';
   queue.querySelectorAll("[data-id]").forEach((button) => button.addEventListener("click", () => openJob(button.dataset.id)));
   renderAcceptanceSummary();
   if (selectId) await openJob(selectId);
@@ -161,7 +161,7 @@ function renderJob() {
   }
   $("#downloadButton").disabled = job.status !== "approved" || !state.templateReady;
   $("#downloadButton").title = state.templateReady
-    ? "鎸夊師濮婨xcel妯℃澘瀵煎嚭锛屽彧鍐欏叆鍥哄畾鍗曞厓鏍煎€硷紝涓嶄慨鏀笶xcel鏍煎紡"
+    ? "按原始Excel模板导出，只写入固定单元格值，不修改Excel格式"
     : state.templateReason;
   $("#approveButton").disabled = job.status === "approved";
   $("#reviewer").value = job.review?.reviewer || "人工审核员";
