@@ -13,6 +13,7 @@ env/
 # IDE and editor files
 .idea/
 .vscode/
+.playwright-cli/
 
 # Node dependencies
 node_modules/

@@ -32,7 +32,7 @@ async function api(url, options = {}) {
   const response = await fetch(url, options);
   const contentType = response.headers.get("content-type") || "";
   const payload = contentType.includes("application/json") ? await response.json() : await response.blob();
-  if (!response.ok) throw new Error(payload.error || `璇锋眰澶辫触锛?{response.status}`);
+  if (!response.ok) throw new Error(payload.error || `请求失败：${response.status}`);
   return payload;
 }
 function downloadJson(filename, payload) {
@@ -140,10 +140,10 @@ function renderJob() {
   const job = state.current;
   $("#emptyState").hidden = true; $("#jobView").hidden = false;
   $("#jobTitle").textContent = job.source_file;
-  $("#jobMeta").textContent = `任务 ${job.id} 路 ${formatStatus(job.status)} 路 ${job.quote.document.page_count} 页`;
+  $("#jobMeta").textContent = `任务 ${job.id} · ${formatStatus(job.status)} · ${job.quote.document.page_count} 页`;
   const sourceUrl = `/api/jobs/${job.id}/source`;
   $("#sourcePreview").src = sourceUrl;
-  $("#sourceMeta").textContent = `${job.source?.size_bytes ?? 0} bytes 路 SHA-256 ${(job.source?.sha256 || "").slice(0, 12)}...`;
+  $("#sourceMeta").textContent = `${job.source?.size_bytes ?? 0} bytes · SHA-256 ${(job.source?.sha256 || "").slice(0, 12)}...`;
   $("#openSourceButton").dataset.sourceUrl = sourceUrl;
   $("#headerFields").innerHTML = Object.entries(job.quote.headers).map(([key, candidate]) => inputFor(`headers.${key}`, candidate)).join("");
   $("#totalFields").innerHTML = Object.entries(job.quote.totals).map(([key, candidate]) => inputFor(`totals.${key}`, candidate, "number", totalLabels[key])).join("");
@@ -190,7 +190,7 @@ function renderReviewHistory() {
   const history = state.current.review_history || [];
   const container = $("#reviewHistory");
   container.innerHTML = history.length ? `<div class="review-history-title">审核记录</div>${history.slice().reverse().map((entry) => `
-    <div class="review-entry"><span>${escapeHtml(entry.reviewed_at)}</span><strong>${escapeHtml(entry.reviewer)} 路 ${escapeHtml(entry.outcome)}</strong><span>${escapeHtml(entry.note || `${entry.changed_paths?.length || 0} 个字段变更`)}</span></div>`).join("")}` : "";
+    <div class="review-entry"><span>${escapeHtml(entry.reviewed_at)}</span><strong>${escapeHtml(entry.reviewer)} · ${escapeHtml(entry.outcome)}</strong><span>${escapeHtml(entry.note || `${entry.changed_paths?.length || 0} 个字段变更`)}</span></div>`).join("")}` : "";
 }
 function renderAlertHistory() {
   const alerts = state.current.alerts || [];
@@ -201,7 +201,7 @@ function renderAlertHistory() {
     const delivery = entry.delivery || {};
     const delivered = delivery.channel === "webhook" ? Boolean(delivery.success) : true;
     const detail = delivery.channel === "webhook"
-      ? `${delivered ? "已送达" : "投递失败"} 路 ${delivery.attempts || 0} 次尝试${delivery.status ? ` 路 HTTP ${delivery.status}` : ""}${delivery.next_retry_at ? ` 路 下次 ${delivery.next_retry_at}` : ""}`
+      ? `${delivered ? "已送达" : "投递失败"} · ${delivery.attempts || 0} 次尝试${delivery.status ? ` · HTTP ${delivery.status}` : ""}${delivery.next_retry_at ? ` · 下次 ${delivery.next_retry_at}` : ""}`
       : "本地告警已保存";
     return `<div class="alert-entry ${delivered ? "delivered" : "failed"}"><span>${escapeHtml(entry.payload?.created_at || "")}</span><strong>${escapeHtml(entry.payload?.event || "alert")}</strong><span>${escapeHtml(detail)}</span></div>`;
   }).join("")}`;
@@ -219,7 +219,7 @@ async function retryFailedAlerts() {
 }
 function renderIssues() {
   const validation = state.current.validation;
-  $("#issueSummary").textContent = `${validation.blocking_issue_count} 个阻断项 路 ${validation.warning_count} 个提醒`;
+  $("#issueSummary").textContent = `${validation.blocking_issue_count} 个阻断项 · ${validation.warning_count} 个提醒`;
   $("#issues").innerHTML = validation.issues.length ? validation.issues.map((entry) => `
     <div class="issue ${entry.severity}"><span class="issue-level">${entry.severity}</span><span class="issue-path">${escapeHtml(entry.path)}</span><span>${escapeHtml(entry.message)}</span></div>`).join("") : '<div class="no-issues">校验通过，可以提交人工审核。</div>';
 }
@@ -302,9 +302,9 @@ async function openMappingModal() {
   if (!state.templateSetup.available) return showToast(state.templateSetup.reason);
   const draft = structuredClone(state.templateSetup.draft);
   state.mappingDraft = draft;
-  $("#mappingMeta").textContent = `${state.templateSetup.template_file} 路 SHA-256 ${state.templateSetup.template_sha256.slice(0, 12)}...`;
+  $("#mappingMeta").textContent = `${state.templateSetup.template_file} · SHA-256 ${state.templateSetup.template_sha256.slice(0, 12)}...`;
   const sheet = $("#mappingSheet");
-  sheet.innerHTML = state.templateSetup.sheets.map((entry) => `<option value="${escapeHtml(entry.name)}">${escapeHtml(entry.name)} 路 ${escapeHtml(entry.dimension || "未定义区域")} 路 ${entry.formula_count} 个公式</option>`).join("");
+  sheet.innerHTML = state.templateSetup.sheets.map((entry) => `<option value="${escapeHtml(entry.name)}">${escapeHtml(entry.name)} · ${escapeHtml(entry.dimension || "未定义区域")} · ${entry.formula_count} 个公式</option>`).join("");
   sheet.value = draft.sheet_name;
   $("#mappingStartRow").value = draft.items.start_row || "";
   $("#mappingMaxRows").value = draft.items.max_rows || "";
