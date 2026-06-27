@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any
 
 from .acceptance import generate_acceptance_report
-from .local_workflow import build_default_workflow, format_workflow_error
+from .local_workflow import build_agent_only_workflow, build_default_workflow, format_workflow_error
 from .service import QuoteService
 
 
@@ -46,6 +46,21 @@ def build_parser() -> argparse.ArgumentParser:
     run_local.add_argument("--export", action="store_true")
     run_local.set_defaults(handler=handle_run_local)
 
+    run_from_ocr = subparsers.add_parser(
+        "run-from-ocr",
+        help="Continue from local PaddleOCR JSONL/Markdown artifacts downloaded by n8n",
+    )
+    run_from_ocr.add_argument("--pdf", type=Path, required=True)
+    run_from_ocr.add_argument("--ocr-jsonl", type=Path)
+    run_from_ocr.add_argument("--ocr-md", type=Path)
+    run_from_ocr.add_argument("--ocr-job-id", default="")
+    run_from_ocr.add_argument("--ocr-result-url", default="")
+    run_from_ocr.add_argument("--ocr-model", default="PaddleOCR-VL")
+    run_from_ocr.add_argument("--reviewer", default="Local Workflow")
+    run_from_ocr.add_argument("--approve", action="store_true")
+    run_from_ocr.add_argument("--export", action="store_true")
+    run_from_ocr.set_defaults(handler=handle_run_from_ocr)
+
     import_template = subparsers.add_parser("import-template", help="Import a local Excel quotation template")
     import_template.add_argument("--template", type=Path, required=True)
     import_template.set_defaults(handler=handle_import_template)
@@ -73,6 +88,23 @@ def handle_run_local(args: argparse.Namespace) -> dict[str, Any]:
     """执行本地 PDF -> OCR -> DeepSeek -> 审核任务流程。"""
     workflow = build_default_workflow(args.project_root)
     result = workflow.run(args.pdf, reviewer=args.reviewer, approve=args.approve, export=args.export)
+    return {"ok": True, **result.to_summary()}
+
+
+def handle_run_from_ocr(args: argparse.Namespace) -> dict[str, Any]:
+    """Execute DeepSeek extraction and job creation from existing OCR artifacts."""
+    workflow = build_agent_only_workflow(args.project_root)
+    result = workflow.run_from_ocr_artifacts(
+        args.pdf,
+        ocr_jsonl_path=args.ocr_jsonl,
+        ocr_markdown_path=args.ocr_md,
+        ocr_job_id=args.ocr_job_id,
+        ocr_result_url=args.ocr_result_url,
+        ocr_model=args.ocr_model,
+        reviewer=args.reviewer,
+        approve=args.approve,
+        export=args.export,
+    )
     return {"ok": True, **result.to_summary()}
 
 

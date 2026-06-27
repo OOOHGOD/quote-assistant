@@ -136,6 +136,45 @@ class LocalWorkflowTests(unittest.TestCase):
             self.assertNotIn("google", json.dumps(result.job, ensure_ascii=False).lower())
             self.assertFalse(result.output_path)
 
+    def test_local_workflow_continues_from_existing_ocr_jsonl(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            service = create_service(root)
+            workflow = LocalQuoteWorkflow(service, FakeOcrEngine(), FakeExtractionAgent())
+            source = PROJECT_ROOT / "samples" / "quote-normal.pdf"
+            jsonl_path = root / "external-ocr.jsonl"
+            jsonl_path.write_text(
+                json.dumps(
+                    {
+                        "result": {
+                            "layoutParsingResults": [
+                                {
+                                    "markdown": {
+                                        "text": "Quote No: Q-N8N-001\nSupplier: n8n Supplier\nCurrency: CNY"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+
+            result = workflow.run_from_ocr_artifacts(
+                source,
+                ocr_jsonl_path=jsonl_path,
+                ocr_job_id="n8n-paddle-job-1",
+                ocr_result_url="https://example.invalid/n8n.jsonl",
+                reviewer="n8n",
+            )
+
+            self.assertEqual("ready_for_review", result.job["status"])
+            self.assertEqual("n8n-paddle-job-1", result.job["ocr"]["job_id"])
+            self.assertEqual("https://example.invalid/n8n.jsonl", result.job["ocr"]["result_url"])
+            self.assertTrue((result.ocr_artifact_dir / "ocr.jsonl").is_file())
+            self.assertTrue((result.ocr_artifact_dir / "ocr.md").is_file())
+
     def test_cli_acceptance_command_returns_json(self):
         completed = subprocess.run(
             [sys.executable, "-m", "quote_assistant.cli", "--project-root", str(PROJECT_ROOT), "acceptance"],

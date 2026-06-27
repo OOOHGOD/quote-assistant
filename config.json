@@ -8,5 +8,8 @@
   "max_manual_items": 500,
   "max_pdf_bytes": 52428800,
   "alert_retry_interval_seconds": 30,
+  "web_upload_prefer_ocr": true,
+  "web_upload_fallback_without_ocr_credentials": true,
+  "web_upload_fallback_on_ocr_error": false,
   "excel_template_mapping": "templates/template_mapping.json"
 }

@@ -7,6 +7,8 @@
 - PaddleOCR：识别 PDF 版面并输出 JSONL/Markdown。
 - DeepSeek：把 OCR 文本抽取成统一的报价单 JSON。
 
+如果外部已经有 n8n 工作流负责监听 Google Drive、下载 PDF、提交 PaddleOCR、轮询状态并下载 JSONL，本项目可以从本地 PDF + 本地 OCR JSONL/Markdown 继续执行 DeepSeek 抽取、审核、模板映射和 Excel 导出。云端文件搬运仍由 n8n 负责，本项目不保存 Google Drive 凭证。
+
 ## 核心能力
 
 - 本地 PDF 报价单解析。
@@ -32,6 +34,20 @@
   -> template_mapping.json 映射
   -> template_export.py 写入固定 Excel 模板副本
   -> output/quote-<job_id>.xlsx 或 .xlsm
+```
+
+n8n 对接模式：
+
+```text
+n8n Manual / Google Drive PDF
+  -> n8n 下载 PDF 到本地临时目录
+  -> n8n 提交 PaddleOCR-VL-1.6
+  -> n8n Wait + 轮询 OCR 状态
+  -> n8n 下载 resultUrl.jsonUrl 为 OCR JSONL
+  -> python -m quote_assistant.cli run-from-ocr
+  -> DeepSeek agent 抽取 quote JSON
+  -> 本地审核/批准/Excel 模板填值
+  -> n8n 读取 output/quote-<job_id>.xlsm 后自行上传到 Google Drive
 ```
 
 模板导出不是让 AI 直接填写 Excel。AI 只负责把 OCR 文本整理为标准 JSON；最终 Excel 写入完全由 `templates/template_mapping.json` 决定。
@@ -166,6 +182,9 @@ $env:DEEPSEEK_MODEL = "deepseek-v4-flash"
 | `PADDLEOCR_POLL_INTERVAL_SECONDS` | `5` | OCR 轮询间隔。 |
 | `DEEPSEEK_BASE_URL` | `https://api.deepseek.com` | DeepSeek API 地址。 |
 | `DEEPSEEK_TIMEOUT_SECONDS` | `120` | DeepSeek 请求超时。 |
+| `web_upload_prefer_ocr` | `true` | `config.json` 中的网页上传策略：优先使用 PaddleOCR + DeepSeek。 |
+| `web_upload_fallback_without_ocr_credentials` | `true` | 未配置 OCR/DeepSeek 环境变量时，网页上传是否回退到 pypdf 快速解析。 |
+| `web_upload_fallback_on_ocr_error` | `false` | OCR 或 DeepSeek 已开始执行但失败时，是否吞掉错误并回退到 pypdf。默认不回退，方便排查真实 API 问题。 |
 | `ALERT_WEBHOOK_URL` | 空 | 可选告警 Webhook。 |
 | `ALERT_WEBHOOK_SECRET` | 空 | 可选 Webhook HMAC 签名密钥。 |
 
@@ -200,13 +219,29 @@ python -m quote_assistant.cli run-local --pdf .\samples\quote-normal.pdf --revie
 output/quote-<job_id>.xlsm
 ```
 
-### 3. 生成验收报告
+### 3. 从 n8n 已下载的 OCR JSONL 继续执行
+
+当 n8n 已经完成 PaddleOCR 提交、轮询和 JSONL 下载后，使用这个命令继续跑 DeepSeek、校验、审核状态和可选 Excel 导出：
+
+```cmd
+python -m quote_assistant.cli run-from-ocr --pdf .\samples\quote-normal.pdf --ocr-jsonl .\data\n8n\ocr.jsonl --ocr-job-id paddle-job-id --reviewer n8n
+```
+
+如果 n8n 已经从 JSONL 中整理出 Markdown，也可以直接传 Markdown：
+
+```cmd
+python -m quote_assistant.cli run-from-ocr --pdf .\samples\quote-normal.pdf --ocr-md .\data\n8n\ocr.md --reviewer n8n --approve --export
+```
+
+`run-from-ocr` 不会重新提交 PaddleOCR，因此只需要 `DEEPSEEK_API_KEY`。输出仍然写入本项目的 `data/jobs/<job_id>/` 和 `output/`。
+
+### 4. 生成验收报告
 
 ```cmd
 python -m quote_assistant.cli acceptance
 ```
 
-### 4. 启动可选 HTTP 工作台
+### 5. 启动可选 HTTP 工作台
 
 ```cmd
 python app.py --host 127.0.0.1 --port 8765
@@ -217,6 +252,8 @@ python app.py --host 127.0.0.1 --port 8765
 ```text
 http://127.0.0.1:8765
 ```
+
+网页上传 PDF 时，如果 `PADDLEOCR_TOKEN` 和 `DEEPSEEK_API_KEY` 已配置，会调用 `quote_assistant.local_workflow.build_default_workflow()`，也就是 `PaddleOCR.py` + `deepseek_agent.py` + `local_workflow.py` 这条 Python 主链路；未配置 key 时才回退到 `parser.py` 的本地 pypdf 规则解析。
 
 ## 模板识别和激活
 

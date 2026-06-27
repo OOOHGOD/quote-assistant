@@ -17,7 +17,7 @@ from typing import Any, Protocol
 
 from .deepseek_agent import QuoteExtractionAgent
 from .models import utc_now
-from .PaddleOCR import OcrDocument, PaddleOcrClient
+from .PaddleOCR import OcrDocument, PaddleOcrClient, extract_markdown, parse_jsonl
 from .service import QuoteService
 from .template_export import TemplateExportError
 from .validation import validate_quote
@@ -73,6 +73,24 @@ def build_default_workflow(project_root: Path) -> "LocalQuoteWorkflow":
     )
 
 
+def build_agent_only_workflow(project_root: Path) -> "LocalQuoteWorkflow":
+    """Create a workflow that can consume OCR artifacts without PaddleOCR credentials."""
+    from .deepseek_agent import DeepSeekClient, DeepSeekSettings
+
+    return LocalQuoteWorkflow(
+        service=QuoteService(project_root),
+        ocr_engine=_UnavailableOcrEngine(),
+        extraction_agent=QuoteExtractionAgent(DeepSeekClient(DeepSeekSettings.from_env())),
+    )
+
+
+class _UnavailableOcrEngine:
+    """Placeholder OCR engine for commands that already have OCR artifacts."""
+
+    def parse_local_file(self, file_path: Path) -> OcrDocument:
+        raise RuntimeError("PADDLEOCR_TOKEN is required unless OCR JSONL/Markdown artifacts are provided.")
+
+
 class LocalQuoteWorkflow:
     """本地报价单处理主流程。"""
 
@@ -93,17 +111,65 @@ class LocalQuoteWorkflow:
 
         `approve/export` 是显式开关：默认只生成待审核任务，避免未经人工确认就写出正式 Excel。
         """
-        content = pdf_path.read_bytes()
-        _validate_local_pdf(pdf_path, content, int(self.service.config.get("max_pdf_bytes", 50 * 1024 * 1024)))
+        content = _read_valid_pdf(pdf_path, int(self.service.config.get("max_pdf_bytes", 50 * 1024 * 1024)))
+        ocr_document = self.ocr_engine.parse_local_file(pdf_path)
+        return self._create_result_from_ocr_document(
+            pdf_path=pdf_path,
+            content=content,
+            ocr_document=ocr_document,
+            reviewer=reviewer,
+            approve=approve,
+            export=export,
+        )
 
+    def run_from_ocr_artifacts(
+        self,
+        pdf_path: Path,
+        *,
+        ocr_jsonl_path: Path | None = None,
+        ocr_markdown_path: Path | None = None,
+        ocr_job_id: str = "",
+        ocr_result_url: str = "",
+        ocr_model: str = "PaddleOCR-VL",
+        reviewer: str = "Local Workflow",
+        approve: bool = False,
+        export: bool = False,
+    ) -> LocalWorkflowResult:
+        """Continue the workflow from OCR artifacts downloaded by n8n or another runner."""
+        content = _read_valid_pdf(pdf_path, int(self.service.config.get("max_pdf_bytes", 50 * 1024 * 1024)))
+        ocr_document = build_ocr_document_from_artifacts(
+            ocr_jsonl_path=ocr_jsonl_path,
+            ocr_markdown_path=ocr_markdown_path,
+            ocr_job_id=ocr_job_id,
+            ocr_result_url=ocr_result_url,
+            ocr_model=ocr_model,
+        )
+        return self._create_result_from_ocr_document(
+            pdf_path=pdf_path,
+            content=content,
+            ocr_document=ocr_document,
+            reviewer=reviewer,
+            approve=approve,
+            export=export,
+        )
+
+    def _create_result_from_ocr_document(
+        self,
+        *,
+        pdf_path: Path,
+        content: bytes,
+        ocr_document: OcrDocument,
+        reviewer: str,
+        approve: bool,
+        export: bool,
+    ) -> LocalWorkflowResult:
+        """Create a job from a normalized OCR document and run review/export switches."""
         job_id = uuid.uuid4().hex[:12]
-        # 本地流程不走 HTTP 上传，所以这里手动建立与 service.create_job 相同的任务目录结构。
         job_dir = self.service.store.job_dir(job_id)
         job_dir.mkdir(parents=True, exist_ok=True)
         source_path = job_dir / "source.pdf"
         source_path.write_bytes(content)
 
-        ocr_document = self.ocr_engine.parse_local_file(pdf_path)
         ocr_artifact_dir = job_dir / "ocr"
         ocr_document.write_artifacts(ocr_artifact_dir)
         # DeepSeek 只接收 OCR markdown，不直接读 PDF；这样 OCR 与结构化抽取边界清晰。
@@ -198,6 +264,55 @@ def save_json(path: Path, payload: dict[str, Any]) -> None:
     """写入格式化 JSON，并自动创建父目录。"""
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def build_ocr_document_from_artifacts(
+    *,
+    ocr_jsonl_path: Path | None = None,
+    ocr_markdown_path: Path | None = None,
+    ocr_job_id: str = "",
+    ocr_result_url: str = "",
+    ocr_model: str = "PaddleOCR-VL",
+) -> OcrDocument:
+    """Build the standard OCR document from local PaddleOCR JSONL and/or Markdown files."""
+    if ocr_jsonl_path is None and ocr_markdown_path is None:
+        raise ValueError("Either --ocr-jsonl or --ocr-md is required.")
+
+    jsonl_text = ""
+    raw_lines: list[dict[str, Any]] = []
+    markdown_text = ""
+
+    if ocr_jsonl_path is not None:
+        if not ocr_jsonl_path.is_file():
+            raise ValueError(f"OCR JSONL does not exist: {ocr_jsonl_path}")
+        jsonl_text = ocr_jsonl_path.read_text(encoding="utf-8")
+        raw_lines = parse_jsonl(jsonl_text)
+        markdown_text = extract_markdown(raw_lines)
+
+    if ocr_markdown_path is not None:
+        if not ocr_markdown_path.is_file():
+            raise ValueError(f"OCR Markdown does not exist: {ocr_markdown_path}")
+        markdown_text = ocr_markdown_path.read_text(encoding="utf-8")
+
+    if not markdown_text.strip():
+        raise ValueError("OCR artifacts produced empty markdown text.")
+
+    return OcrDocument(
+        job_id=ocr_job_id.strip() or "external-ocr-artifact",
+        model=ocr_model.strip() or "PaddleOCR-VL",
+        markdown_text=markdown_text,
+        jsonl_text=jsonl_text,
+        raw_lines=raw_lines,
+        result_url=ocr_result_url.strip(),
+        metadata={"source": "external_ocr_artifact"},
+    )
+
+
+def _read_valid_pdf(pdf_path: Path, max_bytes: int) -> bytes:
+    """Read a local PDF after the shared workflow validation checks."""
+    content = pdf_path.read_bytes()
+    _validate_local_pdf(pdf_path, content, max_bytes)
+    return content
 
 
 def _validate_local_pdf(pdf_path: Path, content: bytes, max_bytes: int) -> None:

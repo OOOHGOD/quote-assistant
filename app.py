@@ -16,6 +16,8 @@ import cgi
 from copy import deepcopy
 import json
 import mimetypes
+import os
+import tempfile
 import threading
 import time
 from http import HTTPStatus
@@ -24,6 +26,7 @@ from pathlib import Path
 from urllib.parse import unquote, urlparse
 
 from quote_assistant.acceptance import generate_acceptance_report
+from quote_assistant.local_workflow import build_default_workflow
 from quote_assistant.service import QuoteService
 
 
@@ -114,7 +117,7 @@ class Handler(BaseHTTPRequestHandler):
         if upload is None or not getattr(upload, "filename", None):
             return self.json_response({"error": "未收到PDF文件。"}, HTTPStatus.BAD_REQUEST)
         try:
-            job = SERVICE.create_job(upload.filename, upload.file.read())
+            job = create_uploaded_job(upload.filename, upload.file.read())
             return self.json_response(self.public_job(job), HTTPStatus.CREATED)
         except Exception as exc:
             return self.json_response({"error": str(exc)}, HTTPStatus.BAD_REQUEST)
@@ -240,6 +243,38 @@ def retry_alert_worker() -> None:
         except Exception as exc:
             print(f"Alert retry worker error: {exc}")
         time.sleep(interval)
+
+
+def create_uploaded_job(filename: str, content: bytes) -> dict:
+    """Create an uploaded job, preferring the OCR + agent workflow when configured."""
+    if not _web_upload_prefers_ocr():
+        return SERVICE.create_job(filename, content)
+
+    if not _ocr_credentials_available():
+        if bool(SERVICE.config.get("web_upload_fallback_without_ocr_credentials", True)):
+            return SERVICE.create_job(filename, content)
+        raise RuntimeError("PADDLEOCR_TOKEN and DEEPSEEK_API_KEY are required for web upload OCR.")
+
+    safe_name = Path(filename).name or "uploaded.pdf"
+    try:
+        with tempfile.TemporaryDirectory(prefix="quote-upload-") as directory:
+            temp_pdf = Path(directory) / safe_name
+            temp_pdf.write_bytes(content)
+            return build_default_workflow(SERVICE.project_root).run(temp_pdf, reviewer="HTTP Upload").job
+    except Exception:
+        if bool(SERVICE.config.get("web_upload_fallback_on_ocr_error", False)):
+            return SERVICE.create_job(filename, content)
+        raise
+
+
+def _web_upload_prefers_ocr() -> bool:
+    """Return whether browser uploads should use PaddleOCR + DeepSeek before pypdf."""
+    return bool(SERVICE.config.get("web_upload_prefer_ocr", True))
+
+
+def _ocr_credentials_available() -> bool:
+    """Check credentials without constructing API clients, so missing env vars can fall back."""
+    return bool(os.environ.get("PADDLEOCR_TOKEN", "").strip() and os.environ.get("DEEPSEEK_API_KEY", "").strip())
 
 
 if __name__ == "__main__":

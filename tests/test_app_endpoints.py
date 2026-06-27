@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import contextlib
 import json
+import os
 import tempfile
 import threading
 import unittest
@@ -156,6 +157,60 @@ class AppEndpointTests(unittest.TestCase):
                     self.assertEqual("no-store", response.headers["Cache-Control"])
                     self.assertEqual("nosniff", response.headers["X-Content-Type-Options"])
                     self.assertTrue(response.read().startswith(b"%PDF-"))
+
+    def test_upload_prefers_ocr_workflow_when_credentials_are_available(self):
+        with tempfile.TemporaryDirectory() as directory:
+            service = self.create_service(Path(directory))
+            original_service = app_module.SERVICE
+            original_builder = app_module.build_default_workflow
+            original_token = os.environ.get("PADDLEOCR_TOKEN")
+            original_deepseek = os.environ.get("DEEPSEEK_API_KEY")
+            calls: list[dict] = []
+
+            class FakeResult:
+                def __init__(self, job: dict):
+                    self.job = job
+
+            class FakeWorkflow:
+                def run(self, pdf_path: Path, *, reviewer: str = "Local Workflow", approve: bool = False, export: bool = False):
+                    calls.append({"pdf_path": pdf_path, "reviewer": reviewer, "approve": approve, "export": export})
+                    return FakeResult(
+                        {
+                            "id": "web-ocr-job",
+                            "source_file": pdf_path.name,
+                            "status": "ready_for_review",
+                            "validation": {"blocking_issue_count": 0, "warning_count": 0},
+                            "quote": {},
+                            "alerts": [],
+                            "ocr": {"provider": "paddleocr", "job_id": "web-ocr-1"},
+                            "agent": {"provider": "deepseek"},
+                        }
+                    )
+
+            try:
+                app_module.SERVICE = service
+                app_module.build_default_workflow = lambda project_root: FakeWorkflow()
+                os.environ["PADDLEOCR_TOKEN"] = "test-token"
+                os.environ["DEEPSEEK_API_KEY"] = "test-key"
+
+                job = app_module.create_uploaded_job("supplier-quote.pdf", (PROJECT_ROOT / "samples" / "quote-normal.pdf").read_bytes())
+
+                self.assertEqual("web-ocr-job", job["id"])
+                self.assertEqual("supplier-quote.pdf", job["source_file"])
+                self.assertEqual("paddleocr", job["ocr"]["provider"])
+                self.assertEqual(1, len(calls))
+                self.assertEqual("HTTP Upload", calls[0]["reviewer"])
+            finally:
+                app_module.SERVICE = original_service
+                app_module.build_default_workflow = original_builder
+                if original_token is None:
+                    os.environ.pop("PADDLEOCR_TOKEN", None)
+                else:
+                    os.environ["PADDLEOCR_TOKEN"] = original_token
+                if original_deepseek is None:
+                    os.environ.pop("DEEPSEEK_API_KEY", None)
+                else:
+                    os.environ["DEEPSEEK_API_KEY"] = original_deepseek
 
     def test_acceptance_endpoint_returns_report(self):
         with tempfile.TemporaryDirectory() as directory:
