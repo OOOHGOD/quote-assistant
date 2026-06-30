@@ -101,7 +101,7 @@ class QuoteExtractionAgent:
             system_prompt=QUOTE_SYSTEM_PROMPT,
             user_prompt=build_quote_prompt(markdown_text, source_name=source_name),
         )
-        return quote_from_agent_payload(payload, source_name=source_name, ocr_job_id=ocr_job_id)
+        return quote_from_agent_payload(payload, source_name=source_name, ocr_job_id=ocr_job_id, ocr_markdown=markdown_text)
 
 
 QUOTE_SYSTEM_PROMPT = """
@@ -197,7 +197,13 @@ def parse_json_object(content: str) -> dict[str, Any]:
     return payload
 
 
-def quote_from_agent_payload(payload: dict[str, Any], *, source_name: str, ocr_job_id: str = "") -> dict[str, Any]:
+def quote_from_agent_payload(
+    payload: dict[str, Any],
+    *,
+    source_name: str,
+    ocr_job_id: str = "",
+    ocr_markdown: str = "",
+) -> dict[str, Any]:
     """把 agent 原始 JSON 转成系统内部 quote schema。
 
     每个字段都包装成 `{value, confidence, source}`，这样校验和前端审核可以统一处理来源与置信度。
@@ -205,7 +211,7 @@ def quote_from_agent_payload(payload: dict[str, Any], *, source_name: str, ocr_j
     headers = payload.get("headers") if isinstance(payload.get("headers"), dict) else {}
     totals = payload.get("totals") if isinstance(payload.get("totals"), dict) else {}
     raw_items = payload.get("items") if isinstance(payload.get("items"), list) else []
-    source = {"type": "deepseek_agent", "source_file": source_name, "ocr_job_id": ocr_job_id}
+    base_source = {"type": "deepseek_agent", "source_file": source_name, "ocr_job_id": ocr_job_id}
 
     quote_items = []
     for index, raw_item in enumerate(raw_items, start=1):
@@ -214,7 +220,8 @@ def quote_from_agent_payload(payload: dict[str, Any], *, source_name: str, ocr_j
         item = {"line_no": index}
         for name in ITEM_FIELDS:
             value = normalize_value(raw_item.get(name), numeric=name in NUMERIC_FIELDS)
-            item[name] = field(value, confidence_for(value), source)
+            confidence, confidence_detail = confidence_for(value, name=name, ocr_markdown=ocr_markdown)
+            item[name] = field(value, confidence, source_with_confidence(base_source, confidence_detail))
         quote_items.append(item)
 
     extraction_issues = []
@@ -224,29 +231,33 @@ def quote_from_agent_payload(payload: dict[str, Any], *, source_name: str, ocr_j
             if note:
                 extraction_issues.append(issue("AGENT_NOTE", "warning", str(note), "agent.notes"))
 
-    return {
+    quote = {
         "document": {
             "page_count": None,
             "text_char_count": None,
             "parser": "paddleocr+deepseek-agent-v1",
         },
         "headers": {
-            name: field(normalize_value(headers.get(name)), confidence_for(headers.get(name)), source)
+            name: field(
+                normalize_value(headers.get(name)),
+                *field_confidence_and_source(headers.get(name), name, base_source, ocr_markdown),
+            )
             for name in HEADER_FIELDS
         },
         "items": quote_items,
         "totals": {
             name: field(
                 normalize_value(totals.get(name), numeric=name in NUMERIC_FIELDS),
-                confidence_for(totals.get(name)),
-                source,
+                *field_confidence_and_source(totals.get(name), name, base_source, ocr_markdown),
             )
             for name in TOTAL_FIELDS
         },
-        "evidence": [source],
+        "evidence": [base_source],
         "extraction_issues": extraction_issues,
         "raw_pages": [],
     }
+    apply_consistency_confidence(quote)
+    return quote
 
 
 def normalize_value(value: Any, *, numeric: bool = False) -> Any:
@@ -268,6 +279,154 @@ def normalize_value(value: Any, *, numeric: bool = False) -> Any:
         return None
 
 
-def confidence_for(value: Any) -> float:
-    """给 agent 结果设置默认置信度；缺失值置信度为 0。"""
-    return 0.92 if value not in (None, "") else 0.0
+def field_confidence_and_source(
+    raw_value: Any,
+    name: str,
+    base_source: dict[str, Any],
+    ocr_markdown: str,
+) -> tuple[float, dict[str, Any]]:
+    """Return a confidence/source pair for a normalized field wrapper."""
+    value = normalize_value(raw_value, numeric=name in NUMERIC_FIELDS)
+    confidence, detail = confidence_for(value, name=name, ocr_markdown=ocr_markdown)
+    return confidence, source_with_confidence(base_source, detail)
+
+
+def confidence_for(value: Any, *, name: str = "", ocr_markdown: str = "") -> tuple[float, dict[str, Any]]:
+    """Score an agent field using OCR evidence instead of a fixed non-empty value.
+
+    The score is a business confidence used for review routing. It is not a raw
+    PaddleOCR probability or an LLM probability.
+    """
+    if value in (None, ""):
+        return 0.0, {"method": "missing_value", "evidence": "missing"}
+
+    numeric = name in NUMERIC_FIELDS or isinstance(value, (int, float))
+    base = 0.84 if numeric else 0.82
+    evidence = "agent_only"
+    if ocr_value_supported(value, ocr_markdown, numeric=numeric):
+        base += 0.08 if numeric else 0.1
+        evidence = "ocr_text_match"
+    elif numeric:
+        base -= 0.08
+        evidence = "no_numeric_ocr_match"
+
+    if name in {"quote_no", "currency", "quantity", "unit_price", "amount", "subtotal", "tax", "grand_total"}:
+        base += 0.02
+    if name in {"product_name", "supplier"}:
+        base += 0.01
+
+    return clamp_confidence(base), {"method": "ocr_evidence_and_business_rules", "evidence": evidence}
+
+
+def source_with_confidence(base_source: dict[str, Any], detail: dict[str, Any]) -> dict[str, Any]:
+    """Copy the shared source and attach field-specific confidence evidence."""
+    return {**base_source, "confidence_detail": detail}
+
+
+def ocr_value_supported(value: Any, ocr_markdown: str, *, numeric: bool) -> bool:
+    """Check whether a field value has direct textual evidence in OCR markdown."""
+    if not ocr_markdown:
+        return False
+    if numeric:
+        number = normalize_value(value, numeric=True)
+        if number is None:
+            return False
+        return any(candidate and candidate in ocr_markdown for candidate in numeric_candidates(float(number)))
+    needle = compact_text(str(value))
+    haystack = compact_text(ocr_markdown)
+    return bool(needle and needle in haystack)
+
+
+def compact_text(value: str) -> str:
+    """Normalize text for OCR evidence matching across spaces and punctuation."""
+    return re.sub(r"[^0-9a-zA-Z\u4e00-\u9fff]+", "", value).lower()
+
+
+def numeric_candidates(value: float) -> list[str]:
+    """Generate common OCR text forms for a numeric value."""
+    candidates = {str(value), f"{value:.2f}"}
+    if value.is_integer():
+        integer = int(value)
+        candidates.add(str(integer))
+        candidates.add(f"{integer}.00")
+    return sorted(candidates, key=len, reverse=True)
+
+
+def apply_consistency_confidence(quote: dict[str, Any]) -> None:
+    """Adjust numeric confidence with quote arithmetic checks."""
+    subtotal_expected = 0.0
+    all_item_amounts_consistent = True
+    for index, item in enumerate(quote.get("items") or []):
+        quantity = field_value(item.get("quantity"))
+        unit_price = field_value(item.get("unit_price"))
+        amount = field_value(item.get("amount"))
+        if all(isinstance(candidate, (int, float)) for candidate in (quantity, unit_price, amount)):
+            expected = round(quantity * unit_price, 2)
+            subtotal_expected += expected
+            if near_equal(expected, amount):
+                boost_fields(item, ("quantity", "unit_price", "amount"), 0.03, "quantity_unit_price_amount_match")
+            else:
+                all_item_amounts_consistent = False
+                cap_fields(item, ("amount",), 0.62, "quantity_unit_price_amount_mismatch")
+        else:
+            all_item_amounts_consistent = False
+
+    totals = quote.get("totals") or {}
+    subtotal = field_value(totals.get("subtotal"))
+    tax = field_value(totals.get("tax"))
+    grand_total = field_value(totals.get("grand_total"))
+    if isinstance(subtotal, (int, float)) and all_item_amounts_consistent and near_equal(subtotal, subtotal_expected):
+        boost_fields(totals, ("subtotal",), 0.04, "subtotal_matches_items")
+    elif isinstance(subtotal, (int, float)):
+        cap_fields(totals, ("subtotal",), 0.62, "subtotal_mismatch_or_incomplete_items")
+
+    if all(isinstance(candidate, (int, float)) for candidate in (subtotal, tax, grand_total)):
+        if near_equal(round(subtotal + tax, 2), grand_total):
+            boost_fields(totals, ("tax", "grand_total"), 0.04, "grand_total_matches_subtotal_plus_tax")
+        else:
+            cap_fields(totals, ("grand_total",), 0.62, "grand_total_mismatch")
+    elif isinstance(grand_total, (int, float)) and isinstance(subtotal, (int, float)) and tax is None:
+        if near_equal(subtotal, grand_total):
+            boost_fields(totals, ("grand_total",), 0.02, "grand_total_matches_subtotal_without_tax")
+
+
+def field_value(candidate: dict[str, Any] | None) -> Any:
+    """Read the value from a field wrapper."""
+    return (candidate or {}).get("value")
+
+
+def boost_fields(container: dict[str, Any], names: tuple[str, ...], amount: float, reason: str) -> None:
+    """Increase field confidence and record the business-rule evidence."""
+    for name in names:
+        candidate = container.get(name)
+        if isinstance(candidate, dict):
+            candidate["confidence"] = clamp_confidence(float(candidate.get("confidence") or 0.0) + amount)
+            add_confidence_rule(candidate, reason)
+
+
+def cap_fields(container: dict[str, Any], names: tuple[str, ...], cap: float, reason: str) -> None:
+    """Cap field confidence when business rules contradict the extracted value."""
+    for name in names:
+        candidate = container.get(name)
+        if isinstance(candidate, dict):
+            candidate["confidence"] = min(float(candidate.get("confidence") or 0.0), cap)
+            add_confidence_rule(candidate, reason)
+
+
+def add_confidence_rule(candidate: dict[str, Any], reason: str) -> None:
+    """Append business-rule evidence to a field's source metadata."""
+    source = candidate.setdefault("source", {})
+    detail = source.setdefault("confidence_detail", {})
+    rules = detail.setdefault("business_rules", [])
+    if reason not in rules:
+        rules.append(reason)
+
+
+def near_equal(left: float, right: float, tolerance: float = 0.02) -> bool:
+    """Compare money-like values with a small relative tolerance."""
+    return abs(left - right) <= max(0.01, abs(left) * tolerance)
+
+
+def clamp_confidence(value: float) -> float:
+    """Clamp business confidence to the public 0..1 scale."""
+    return round(max(0.0, min(0.99, value)), 3)

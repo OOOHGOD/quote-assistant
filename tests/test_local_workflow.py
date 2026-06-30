@@ -78,7 +78,7 @@ class FakeExtractionAgent:
             "totals": {"subtotal": 200, "tax": 0, "grand_total": 200},
             "notes": [],
         }
-        return quote_from_agent_payload(payload, source_name=source_name, ocr_job_id=ocr_job_id)
+        return quote_from_agent_payload(payload, source_name=source_name, ocr_job_id=ocr_job_id, ocr_markdown=markdown_text)
 
 
 def create_service(root: Path) -> QuoteService:
@@ -121,6 +121,26 @@ class LocalWorkflowTests(unittest.TestCase):
         self.assertEqual(2.0, quote["items"][0]["quantity"]["value"])
         self.assertEqual("deepseek_agent", quote["headers"]["quote_no"]["source"]["type"])
 
+    def test_agent_confidence_uses_ocr_evidence_and_amount_consistency(self):
+        quote = quote_from_agent_payload(
+            {
+                "headers": {"quote_no": "Q1", "supplier": "Supplier Without OCR Evidence", "currency": "CNY"},
+                "items": [{"product_name": "Chair", "quantity": "2", "unit_price": "10", "amount": "20"}],
+                "totals": {"subtotal": "20", "tax": "0", "grand_total": "20"},
+            },
+            source_name="source.pdf",
+            ocr_job_id="ocrjob-1",
+            ocr_markdown="Quote Q1 CNY Chair qty 2 price 10 amount 20 subtotal 20 tax 0 total 20",
+        )
+
+        self.assertGreaterEqual(quote["headers"]["quote_no"]["confidence"], 0.9)
+        self.assertLess(quote["headers"]["supplier"]["confidence"], 0.9)
+        self.assertGreater(quote["items"][0]["amount"]["confidence"], quote["headers"]["supplier"]["confidence"])
+        self.assertEqual(0.0, quote["items"][0]["product_code"]["confidence"])
+        detail = quote["items"][0]["amount"]["source"]["confidence_detail"]
+        self.assertIn("ocr_text_match", detail["evidence"])
+        self.assertIn("quantity_unit_price_amount_match", detail["business_rules"])
+
     def test_local_workflow_creates_job_and_ocr_artifacts_without_cloud_storage(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -150,7 +170,12 @@ class LocalWorkflowTests(unittest.TestCase):
                             "layoutParsingResults": [
                                 {
                                     "markdown": {
-                                        "text": "Quote No: Q-N8N-001\nSupplier: n8n Supplier\nCurrency: CNY"
+                                        "text": (
+                                            "Quote No: Q-LOCAL-001\n"
+                                            "Supplier: Local Supplier\n"
+                                            "Currency: CNY\n"
+                                            "1 | SKU-1 | Chair | Wood | Oak | Natural | pcs | 2 | 100 | 200"
+                                        )
                                     }
                                 }
                             ]

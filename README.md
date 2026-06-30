@@ -102,6 +102,12 @@ quote_assistant/
 | `acceptance.py` | 验收报告生成，验证模板导出和异常阻断流程。 |
 | `models.py` | 通用字段、问题和时间工具。 |
 
+### `docs/`
+
+| 文件 | 作用 |
+| --- | --- |
+| `CONFIDENCE_SCORING.md` | 字段置信度计算说明，解释 OCR 文本证据、金额规则、人工修正与审核阈值的关系。 |
+
 ### `scripts/`
 
 | 文件 | 作用 |
