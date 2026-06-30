@@ -376,3 +376,9 @@ OCR JSONL 会先转为 Markdown，再由 DeepSeek 抽取为标准 quote JSON。E
 ### 能否直接把图片填进 Excel？
 
 模板识别已支持 `product_image.value` 字段。若要真正插入图片文件，需要继续扩展导出层，让它把图片文件复制进 OpenXML 包并创建 drawing relationship。
+
+## License
+
+This project is licensed under the PolyForm Noncommercial License 1.0.0.
+Commercial use is not permitted unless separate written permission is obtained
+from the copyright holder or project owner. See `LICENSE` for details.
